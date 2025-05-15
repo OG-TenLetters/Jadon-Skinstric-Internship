@@ -24,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${notoSans.className} antialiased`}
       >
-        <nav className="flex items-center py-4 text-xs justify-between">
+        <nav className="flex items-center h-[6vh] text-xs justify-between">
           <div className="flex gap-4 pl-8 pr-8  tracking-wide">
             <div className="font-bold">sKINsTRIC</div>
             <div className="text-gray-500">[ INTRO ]</div>
