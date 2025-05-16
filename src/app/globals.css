@@ -12,16 +12,7 @@
 body {
 } */
 
-html {
+body {
   overflow-x: hidden;
 }
 
-
-.left-arrow:hover .skin-header {
-  transform: translateX(400px) !important;
-
-}
-
-.right-arrow:hover .skin-header {
-
-}
