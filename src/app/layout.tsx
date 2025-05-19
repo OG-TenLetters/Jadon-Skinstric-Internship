@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -22,7 +23,7 @@ export default function RootLayout({
       <body className={`${notoSans.className} antialiased`}>
         <nav className="flex items-center h-[7vh] text-xs justify-between">
           <div className="flex gap-4 sm:px-8 pl-4 tracking-wide">
-            <div className="font-bold">sKINsTRIC</div>
+            <Link href="/" className="font-bold">sKINsTRIC</Link>
             <div className="text-gray-500">[ INTRO ]</div>
           </div>
           <button className="text-white py-2 px-4 sm:mx-8 mr-4 bg-black uppercase font-bold rounded-xs

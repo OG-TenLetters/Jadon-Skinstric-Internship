@@ -2,6 +2,8 @@
 import { useRef, useEffect } from "react";
 import Triangle from "./assets/svgs/sharp-triangle.svg";
 import Link from "next/link";
+import NavRight from "./components/NavRight";
+import NavLeft from "./components/NavLeft";
 
 export default function Home() {
   const leftTriggerRef = useRef<HTMLDivElement>(null);
@@ -81,23 +83,9 @@ export default function Home() {
       ></div>
 
       <div className="flex lg:justify-between items-center justify-center">
-        {/* 3. Attach the ref to the left trigger div */}
-        <div
-          ref={leftTriggerRef}
-          className="group lg:flex items-center gap-4 relative ml-20 hidden"
-        >
-          <div className="group-hover:scale-110 group-active:scale-95 relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600  ">
-            {/* Assuming Triangle.src is the correct way to get the image URL */}
-            <img
-              className="w-[12px] h-[12px] -translate-x-[2px] translate-y-[2px] -rotate-225"
-              src={Triangle.src}
-              alt=""
-            />
-          </div>
-          <div className="uppercase">discover a.i</div>
+        <div ref={leftTriggerRef} className="ml-24">
+          <NavLeft empty={() => {}} name="Discover A.I." />
         </div>
-
-        {/* 3. Attach the ref to the target sophisticated text div */}
         <div
           ref={sophisticatedTextRef}
           style={{ animation: "var(--animation-fade-in-delay)" }}
@@ -106,21 +94,9 @@ export default function Home() {
           Sophisticated <span ref={spanRef}>skincare</span>
         </div>
 
-        {/* 3. Attach the ref to the right trigger div */}
-        <Link href="/testingPage">
-          <div
-            ref={rightTriggerRef}
-            className="group lg:flex items-center gap-4 relative mr-20 hidden"
-          >
-            <div className="uppercase">take test</div>
-            <div className="group-hover:scale-110 group-active:scale-95 relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600">
-              {/* Assuming Triangle.src is the correct way to get the image URL */}
-              <img
-                className="w-[12px] h-[12px] translate-x-[2px] -translate-y-[2px] -rotate-45"
-                src={Triangle.src}
-                alt=""
-              />
-            </div>
+        <Link href="/TestingPage">
+          <div className="mr-24" ref={rightTriggerRef}>
+            <NavRight name="Take Test" />
           </div>
         </Link>
       </div>
@@ -133,7 +109,6 @@ export default function Home() {
           enter experience
         </div>
         <div className="relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600 md:scale-100 sm:scale-90 scale-70">
-          {/* Assuming Triangle.src is the correct way to get the image URL */}
           <img
             className="w-[12px] h-[12px] translate-x-[2px] -translate-y-[2px] -rotate-45"
             src={Triangle.src}

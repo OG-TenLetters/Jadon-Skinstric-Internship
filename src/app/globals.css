@@ -9,13 +9,66 @@
   }
 }
 
+@keyframes rotate1 {
+  0% {
+    rotate: -45deg;
+  }
+  100% {
+    rotate: 315deg;
+  }
+}
+@keyframes rotate2 {
+  0% {
+    rotate: -40deg;
+  }
+  100% {
+    rotate: 320deg;
+  }
+}
+@keyframes rotate3 {
+  0% {
+    rotate: -35deg;
+  }
+  100% {
+    rotate: 325deg;
+  }
+}
+@keyframes rotate4 {
+  0% {
+    rotate: -30deg;
+  }
+  100% {
+    rotate: 330deg;
+  }
+}
+
 
 @theme {
   --animation-fade-in: fadeIn 1.5s ease forwards;
   --animation-fade-in-delay: fadeIn 1.5s ease .6s forwards;
+  --animation-rotate-slow1: rotate1 100s linear infinite;
+  --animation-rotate-slow2: rotate2 90s linear infinite;
+  --animation-rotate-slow3: rotate3 80s linear infinite;
+  --animation-rotate-slow4: rotate4 70s linear infinite;
 }
 
 
+.animate-rotate-slow1 {
+  animation: var(--animation-rotate-slow1);
+}
+.animate-rotate-slow2 {
+  animation: var(--animation-rotate-slow2);
+}
+.animate-rotate-slow3 {
+  animation: var(--animation-rotate-slow3);
+}
+.animate-rotate-slow4 {
+  animation: var(--animation-rotate-slow4);
+}
+
+.animate-fade-in {
+  animation: var(--animation-fade-in);
+}
 
 body {
   overflow-x: hidden;
