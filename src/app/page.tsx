@@ -99,7 +99,8 @@ export default function Home() {
         {/* 3. Attach the ref to the target sophisticated text div */}
         <div
           ref={sophisticatedTextRef}
-          className="lg:flex lg:flex-col justify-center items-center lg:max-w-[800px] md:max-w-[600px] max-w-[300px] text-center xl:text-8xl lg:text-7xl sm:max-w-[600px] md:text-6xl text-4xl block"
+           style={{ animation: 'var(--animation-fade-in-delay)' }}
+          className="opacity-0 lg:flex lg:flex-col justify-center items-center lg:max-w-[800px] md:max-w-[600px] max-w-[300px] text-center xl:text-8xl lg:text-7xl sm:max-w-[600px] md:text-6xl text-4xl block"
         >
           Sophisticated <span ref={spanRef}>skincare</span>
         </div>
