@@ -9,13 +9,137 @@
   }
 }
 
+@keyframes rotate1 {
+  0% {
+    rotate: -45deg;
+  }
+  100% {
+    rotate: 315deg;
+  }
+}
+@keyframes rotate2 {
+  0% {
+    rotate: -40deg;
+  }
+  100% {
+    rotate: 320deg;
+  }
+}
+@keyframes rotate3 {
+  0% {
+    rotate: -35deg;
+  }
+  100% {
+    rotate: 325deg;
+  }
+}
+@keyframes rotate4 {
+  0% {
+    rotate: -30deg;
+  }
+  100% {
+    rotate: 330deg;
+  }
+}
 
-@theme {
-  --animation-fade-in: fadeIn 1.5s ease forwards;
-  --animation-fade-in-delay: fadeIn 1.5s ease .6s forwards;
+@keyframes smallJiggle {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-1px);
+  }
+  40% {
+    transform: translateY(1px);
+  }
+  60% {
+    transform: translateY(-0.5px);
+  }
+  80% {
+    transform: translateY(0.5px);
+  }
+  100% {
+    transform: translateY(0);
+
+  }
+}
+@keyframes bigJiggle {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(.7px);
+  }
+  40% {
+    transform: translateY(-.7px);
+  }
+  60% {
+    transform: translateY(.3px);
+  }
+  80% {
+    transform: translateY(.3px);
+  }
+  100% {
+    transform: translateY(0);
+
+  }
+}
+
+@keyframes processComplete {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 
+@theme {
+  --animation-process-complete: processComplete 1.5s ease forwards;
+  --animation-fade-in: fadeIn 1.5s ease forwards;
+  --animation-fade-in-delay: fadeIn 1.5s ease .6s forwards;
+  --animation-rotate-slow1: rotate1 100s linear infinite;
+  --animation-rotate-slow2: rotate2 90s linear infinite;
+  --animation-rotate-slow3: rotate3 80s linear infinite;
+  --animation-rotate-slow4: rotate4 70s linear infinite;
+  --animation-small-jiggle: smallJiggle 2s ease infinite;
+  --animation-big-jiggle: bigJiggle 2s ease infinite;
+  --animation-small-jiggle-delay: smallJiggle 2s ease 1.2s infinite;
+}
+
+
+.animate-rotate-slow1 {
+  animation: var(--animation-rotate-slow1);
+}
+.animate-rotate-slow2 {
+  animation: var(--animation-rotate-slow2);
+}
+.animate-rotate-slow3 {
+  animation: var(--animation-rotate-slow3);
+}
+.animate-rotate-slow4 {
+  animation: var(--animation-rotate-slow4);
+}
+
+.animate-process-complete {
+  animation: var(--animation-process-complete);
+}
+.animate-fade-in {
+  animation: var(--animation-fade-in);
+}
+
+.animate-small-jiggle {
+  animation: var(--animation-small-jiggle);
+}
+.animate-small-jiggle-delay {
+  animation: var(--animation-small-jiggle-delay);
+}
+.animate-big-jiggle {
+  animation: var(--animation-big-jiggle);
+}
 
 body {
   overflow-x: hidden;

@@ -1,6 +1,9 @@
 "use client";
 import { useRef, useEffect } from "react";
 import Triangle from "./assets/svgs/sharp-triangle.svg";
+import Link from "next/link";
+import NavRight from "./components/NavRight";
+import NavLeft from "./components/NavLeft";
 
 export default function Home() {
   const leftTriggerRef = useRef<HTMLDivElement>(null);
@@ -80,63 +83,39 @@ export default function Home() {
       ></div>
 
       <div className="flex lg:justify-between items-center justify-center">
-        {/* 3. Attach the ref to the left trigger div */}
-        <div
-          ref={leftTriggerRef}
-          className="group lg:flex items-center gap-4 relative ml-20 hidden"
-        >
-          <div className="group-hover:scale-110 group-active:scale-95 relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600  ">
-            {/* Assuming Triangle.src is the correct way to get the image URL */}
-            <img
-              className="w-[12px] h-[12px] -translate-x-[2px] translate-y-[2px] -rotate-225"
-              src={Triangle.src}
-              alt=""
-            />
-          </div>
-          <div className="uppercase">discover a.i</div>
+        <div ref={leftTriggerRef} className="ml-24 lg:block hidden">
+          <NavLeft empty={() => {}} name="Discover A.I." />
         </div>
-
-        {/* 3. Attach the ref to the target sophisticated text div */}
         <div
           ref={sophisticatedTextRef}
-           style={{ animation: 'var(--animation-fade-in-delay)' }}
+          style={{ animation: "var(--animation-fade-in-delay)" }}
           className="opacity-0 lg:flex lg:flex-col justify-center items-center lg:max-w-[800px] md:max-w-[600px] max-w-[300px] text-center xl:text-8xl lg:text-7xl sm:max-w-[600px] md:text-6xl text-4xl block"
         >
           Sophisticated <span ref={spanRef}>skincare</span>
         </div>
 
-        {/* 3. Attach the ref to the right trigger div */}
-        <div
-          ref={rightTriggerRef}
-          className="group lg:flex items-center gap-4 relative mr-20 hidden"
-        >
-          <div className="uppercase">take test</div>
-          <div className="group-hover:scale-110 group-active:scale-95 relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600">
-            {/* Assuming Triangle.src is the correct way to get the image URL */}
-            <img
-              className="w-[12px] h-[12px] translate-x-[2px] -translate-y-[2px] -rotate-45"
-              src={Triangle.src}
-              alt=""
-            />
+        <Link href="/pages/testing">
+          <div className="mr-24 lg:block hidden" ref={rightTriggerRef}>
+            <NavRight name="Take Test" />
           </div>
-        </div>
+        </Link>
       </div>
-
       <div className="lg:uppercase lg:text-black text-[#919292] my-4 sm:text-sm text-xs max-w-[260px] lg:font-normal font-bold lg:absolute lg:bottom-4 lg:left-20 lg:text-left static text-center">
         Skinstic developed an A.I. that creates a highly-personalized routine
         tailored to what your skin needs.
       </div>
-      <div className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex">
-        <div className="uppercase font-bold sm:text-sm text-xs">enter experience</div>
+      <Link href="/pages/testing" className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex">
+        <div className="uppercase font-bold sm:text-sm text-xs">
+          enter experience
+        </div>
         <div className="relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600 md:scale-100 sm:scale-90 scale-70">
-          {/* Assuming Triangle.src is the correct way to get the image URL */}
           <img
             className="w-[12px] h-[12px] translate-x-[2px] -translate-y-[2px] -rotate-45"
             src={Triangle.src}
             alt=""
           />
         </div>
-      </div>
+      </Link>
     </div>
   );
 }
