@@ -98,7 +98,7 @@
 
 
 @theme {
-  --animation-process-complete: processComplete 1.5s ease forwards;
+  --animation-process-complete: processComplete 1.5s ease .6s forwards;
   --animation-fade-in: fadeIn 1.5s ease forwards;
   --animation-fade-in-delay: fadeIn 1.5s ease .6s forwards;
   --animation-rotate-slow1: rotate1 100s linear infinite;
