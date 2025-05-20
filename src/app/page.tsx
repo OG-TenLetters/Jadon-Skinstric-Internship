@@ -83,7 +83,7 @@ export default function Home() {
       ></div>
 
       <div className="flex lg:justify-between items-center justify-center">
-        <div ref={leftTriggerRef} className="ml-24">
+        <div ref={leftTriggerRef} className="ml-24 lg:block hidden">
           <NavLeft empty={() => {}} name="Discover A.I." />
         </div>
         <div
@@ -94,8 +94,8 @@ export default function Home() {
           Sophisticated <span ref={spanRef}>skincare</span>
         </div>
 
-        <Link href="/TestingPage">
-          <div className="mr-24" ref={rightTriggerRef}>
+        <Link href="/pages/testing">
+          <div className="mr-24 lg:block hidden" ref={rightTriggerRef}>
             <NavRight name="Take Test" />
           </div>
         </Link>
@@ -104,7 +104,7 @@ export default function Home() {
         Skinstic developed an A.I. that creates a highly-personalized routine
         tailored to what your skin needs.
       </div>
-      <div className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex">
+      <Link href="/pages/testing" className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex">
         <div className="uppercase font-bold sm:text-sm text-xs">
           enter experience
         </div>
@@ -115,7 +115,7 @@ export default function Home() {
             alt=""
           />
         </div>
-      </div>
+      </Link>
     </div>
   );
 }
