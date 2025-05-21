@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
@@ -19,34 +18,29 @@ export default function CountdownProgressBar({currentLink}: CountdownProgressBar
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined;
 
-    if (progress > 0) {
+
       timer = setInterval(() => {
         setProgress((prevProgress) => {
           const newProgress = prevProgress - decrementAmount;
 
           if (newProgress <= 0) {
             clearInterval(timer);
-            router.push(currentLink)
+
+            setTimeout(() => {
+              router.push(currentLink)
+            }, 0)
             return 0;
           }
           return newProgress;
         });
       }, intervalTime);
-    }
 
     return () => {
       if (timer) {
         clearInterval(timer);
       }
     };
-  }, []);
-
-  const sendLink = () => {
-    if (progress === 0) {
-      router.push("/pages/camera/capture")
-    }
-  }
-
+  }, [router, currentLink, decrementAmount, intervalTime]);
   return (
     <div className="m-auto mt-3 w-full max-w-sm bg-gray-400 rounded-full h-2 overflow-hidden -scale-x-100">
       <div

@@ -14,6 +14,7 @@ export default function CameraCapture() {
   const router = useRouter()
 
   useEffect(() => {
+    let currentStream: MediaStream | null = null;
     const requestCamera = async () => {
       setError(null);
       try {
@@ -24,15 +25,7 @@ export default function CameraCapture() {
           },
         });
         setStream(mediaStream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
-          videoRef.current.play().catch((playErr) => {
-            console.error("Error playing video feed:", playErr);
-            setError(
-              "Failed to play video feed. Your browser might require a direct user interaction to play media."
-            );
-          });
-        }
+        currentStream = mediaStream;
       } catch (err: any) {
         console.error("Error accessing camera:", err);
         if (
@@ -72,12 +65,12 @@ export default function CameraCapture() {
     requestCamera();
 
     return () => {
-      if (stream) {
+      if (currentStream) {
         console.log(
           "Component unmounting or stream being replaced. Stopping camera stream."
         );
-        stream.getTracks().forEach((track) => track.stop());
-        setStream(null); // Explicitly clear stream state if component unmounts
+        currentStream.getTracks().forEach((track) => track.stop());
+        setStream(null);
       }
     };
   }, []);
@@ -87,11 +80,8 @@ export default function CameraCapture() {
       const videoElement = videoRef.current;
 
       videoElement.srcObject = stream;
-      // ✨ NEW: Use a 'canplaythrough' listener before calling play() ✨
       const handleCanPlayThrough = () => {
-        console.log("Video element is ready to play (canplaythrough event).");
         videoElement.play().catch((playErr) => {
-          // Catch any errors if play() fails (e.g., user interaction required, though less likely after canplaythrough)
           console.error(
             "Error playing video feed after canplaythrough:",
             playErr
@@ -100,14 +90,11 @@ export default function CameraCapture() {
             "Failed to play video feed automatically. Please ensure browser media policies allow it."
           );
         });
-        // Remove this listener immediately after successful play attempt to prevent multiple calls
         videoElement.removeEventListener(
           "canplaythrough",
           handleCanPlayThrough
         );
       };
-
-      // Attach the listener
       videoElement.addEventListener("canplaythrough", handleCanPlayThrough);
       const handleLoadedMetadata = () => {
         if (canvasRef.current) {
