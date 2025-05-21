@@ -84,7 +84,7 @@ export default function Home() {
 
       <div className="flex lg:justify-between items-center justify-center">
         <div ref={leftTriggerRef} className="ml-24 lg:block hidden">
-          <NavLeft empty={() => {}} name="Discover A.I." />
+          <NavLeft defaulted={false} currentLink={""} name="Discover A.I." />
         </div>
         <div
           ref={sophisticatedTextRef}
@@ -94,17 +94,18 @@ export default function Home() {
           Sophisticated <span ref={spanRef}>skincare</span>
         </div>
 
-        <Link href="/pages/testing">
-          <div className="mr-24 lg:block hidden" ref={rightTriggerRef}>
-            <NavRight name="Take Test" />
-          </div>
-        </Link>
+        <div className="mr-24 lg:block hidden" ref={rightTriggerRef}>
+          <NavRight currentLink={"/pages/testing"} name="Take Test" />
+        </div>
       </div>
       <div className="lg:uppercase lg:text-black text-[#919292] my-4 sm:text-sm text-xs max-w-[260px] lg:font-normal font-bold lg:absolute lg:bottom-4 lg:left-20 lg:text-left static text-center">
         Skinstic developed an A.I. that creates a highly-personalized routine
         tailored to what your skin needs.
       </div>
-      <Link href="/pages/testing" className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex">
+      <Link
+        href="/pages/testing"
+        className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex"
+      >
         <div className="uppercase font-bold sm:text-sm text-xs">
           enter experience
         </div>

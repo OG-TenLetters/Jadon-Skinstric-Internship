@@ -57,7 +57,7 @@ export default function ResultsPage() {
     let navigationTimer: NodeJS.Timeout | undefined;
     if (selectedImage) {
       navigationTimer = setTimeout(() => {
-        alert("Successly Processed!")
+        alert("Image analyzed successfully!")
         router.push("/pages/select");
       }, 2000);
     }
@@ -168,7 +168,7 @@ export default function ResultsPage() {
             />
 
             <div className="flex w-full justify-between pb-8 px-8">
-              <NavLeft active={true} currentLink="/pages/testing" name={"Back"} />
+              <NavLeft defaulted={false} currentLink="/pages/testing" name={"Back"} />
             </div>
           </>
         )}
