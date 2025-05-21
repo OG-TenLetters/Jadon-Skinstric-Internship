@@ -89,7 +89,7 @@ export default function SelectPage() {
         </div>
         <div className="flex w-full justify-between pb-8 px-8 sm:text-[16px] text-[12px]">
           <NavLeft
-            defaulted={true}
+            defaulted={false}
             currentLink="/pages/results"
             name={"Back"}
           />
