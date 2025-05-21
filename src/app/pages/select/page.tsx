@@ -31,40 +31,32 @@ export default function SelectPage() {
           <div className="font-semibold rotate-45 grid gap-2 grid-cols-2 grid-rows-2">
             <div
               ref={smallDiamond}
-              className={`transition-all duration-300 opacity-0 scale-90 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-110 sm:h-110 w-80 h-80 border border-dashed -z-1
-                ${
-                  isTopSelectHovered
-                    ? "animate-fade-zoom-in"
-                    : "animate-fade-zoom-in-reverse"
-                }`}
+              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-110 sm:h-110 w-80 h-80 border border-dashed -z-1 diamond-transition
+                ${isTopSelectHovered ? "diamond-hovered" : ""}`}
             ></div>
             <div
               ref={mediumDiamond}
-              className={`opacity-0 scale-90 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-130 sm:h-130 w-100 h-100 border border-dashed -z-1
+              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-130 sm:h-130 w-100 h-100 border border-dashed -z-1 diamond-transition
                 ${
                   isLeftSelectHovered || isRightSelectHovered
-                    ? "animate-fade-zoom-in"
-                    : "animate-fade-zoom-in-reverse"
+                    ? "diamond-hovered"
+                    : ""
                 }`}
             ></div>
             <div
               ref={largeDiamond}
-              className={`opacity-0 scale-90 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-150 sm:h-150 w-120 h-120 border border-dashed -z-1
-                ${
-                  isBottomSelectHovered
-                    ? "animate-fade-zoom-in"
-                    : "animate-fade-zoom-in-reverse"
-                }`}
+              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-150 sm:h-150 w-120 h-120 border border-dashed -z-1 diamond-transition
+                ${isBottomSelectHovered ? "diamond-hovered" : ""}`}
             ></div>
             <Link href={"/pages/summary"}>
-                <div
-                  ref={topSelect}
-                  onMouseEnter={() => setIsTopSelectHovered(true)}
-                  onMouseLeave={() => setIsTopSelectHovered(false)}
-                  className="hover:scale-105 transition-all duration-300 sm:w-45 sm:h-45 w-28 h-28 bg-[#d8dadd] hover:bg-[#c1c3c9] flex justify-center items-center"
-                >
-                  <p className="-rotate-45 sm:text-lg text-xs">DEMOGRAPHICs</p>
-                </div>
+              <div
+                ref={topSelect}
+                onMouseEnter={() => setIsTopSelectHovered(true)}
+                onMouseLeave={() => setIsTopSelectHovered(false)}
+                className="hover:scale-105 transition-all duration-300 sm:w-45 sm:h-45 w-28 h-28 bg-[#d8dadd] hover:bg-[#c1c3c9] flex justify-center items-center"
+              >
+                <p className="-rotate-45 sm:text-lg text-xs">DEMOGRAPHICs</p>
+              </div>
             </Link>
             <div
               ref={rightSelect}
