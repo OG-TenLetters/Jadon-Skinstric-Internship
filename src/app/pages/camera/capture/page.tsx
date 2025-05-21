@@ -3,6 +3,7 @@
 import NavLeft from "@/app/components/NavLeft";
 import { useEffect, useRef, useState } from "react";
 import CaptureIcon from "../../../assets/svgs/camera-capture.svg";
+import { useRouter } from "next/navigation";
 
 export default function CameraCapture() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -10,6 +11,7 @@ export default function CameraCapture() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
+  const router = useRouter()
 
   useEffect(() => {
     const requestCamera = async () => {
@@ -210,9 +212,9 @@ export default function CameraCapture() {
     canvasRef.current.toBlob(async (blob) => {
       if (blob) {
         console.log(blob)
-
       }
     }, "image/png");
+    router.push("/pages/select")
   };
 
   return (
@@ -258,12 +260,12 @@ export default function CameraCapture() {
           <div className="absolute text-center text-sm bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white uppercase font-semibold">
             <h2 className="mb-4"> to get better results, make sure to have</h2>
             <div className="flex gap-8">
-              <h3>◇ Neutral Expression</h3>
-              <h3>◇ Frontal Pose</h3>
-              <h3>◇ Adequate Lighting</h3>
+              <h3 className="lg:w-full w-16 text-center">◇ Neutral Expression</h3>
+              <h3 className="lg:w-full w-16 text-center">◇ Frontal Pose</h3>
+              <h3 className="lg:w-full w-16 text-center">◇ Adequate Lighting</h3>
             </div>
           </div>
-          <div className="flex items-center gap-4 absolute right-8 top-[50%] translate-y-[-50%]">
+          <div className="flex lg:flex-row flex-col items-center gap-4 absolute lg:right-8 lg:top-[50%] lg:translate-y-[-50%] right-[50%] bottom-40 translate-x-[50%]">
             <h3 className="text-white uppercase font-bold">Take Picture</h3>
             <img
               onClick={takePhoto}
@@ -276,7 +278,7 @@ export default function CameraCapture() {
       )}
 
       <div className="absolute text-white bottom-8 left-8">
-        <NavLeft triangleVariant="white" name="Back" />
+        <NavLeft active={true} currentLink="/pages/results" triangleVariant="white" name="Back" />
       </div>
     </div>
   );

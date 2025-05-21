@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Dot from "../assets/svgs/circle.svg";
+import LoadingDots from "./LoadingDots";
 
 interface DynamicFormProps {
   setProcessComplete: (isComplete: boolean) => void;
@@ -105,23 +105,7 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
         ) : isProcessing ? (
           <>
             <p className="mb-4">Processing submission</p>
-            <div className="flex justify-center gap-2">
-              <img
-                className="animate-small-jiggle w-1.5 h-1.5"
-                src={Dot.src}
-                alt=""
-              />
-              <img
-                className="animate-big-jiggle w-1.5 h-1.5"
-                src={Dot.src}
-                alt=""
-              />
-              <img
-                className="animate-small-jiggle-delay w-1.5 h-1.5"
-                src={Dot.src}
-                alt=""
-              />
-            </div>
+            <LoadingDots />
           </>
         ) : (
           <div>
