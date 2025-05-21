@@ -95,7 +95,7 @@ export default function Home() {
         </div>
 
           <div className="mr-24 lg:block hidden" ref={rightTriggerRef}>
-            <NavRight currentLink="/pages/testing" name="Take Test" />
+            <NavRight currentLink={"/pages/testing"} name="Take Test" />
           </div>
       </div>
       <div className="lg:uppercase lg:text-black text-[#919292] my-4 sm:text-sm text-xs max-w-[260px] lg:font-normal font-bold lg:absolute lg:bottom-4 lg:left-20 lg:text-left static text-center">

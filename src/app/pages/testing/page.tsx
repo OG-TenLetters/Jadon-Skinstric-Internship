@@ -24,11 +24,11 @@ export default function TestingPage() {
       </div>
 
       <div className="flex w-full justify-between pb-8 px-8">
-        <NavLeft active={true} currentLink="/" name={"Back"} />
+        <NavLeft defaulted={false} currentLink="/" name={"Back"} />
 
         {processComplete === true && (
           <div className="animate-process-complete opacity-0">
-              <NavRight currentLink="/pages/results" name={"Proceed"} />
+              <NavRight currentLink={"/pages/results"} name={"Proceed"} />
           </div>
         )}
       </div>

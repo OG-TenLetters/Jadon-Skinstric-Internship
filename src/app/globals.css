@@ -122,7 +122,7 @@
   --animation-big-jiggle: bigJiggle 2s ease infinite;
   --animation-small-jiggle-delay: smallJiggle 2s ease 1.2s infinite;
   --animation-fade-zoom-in: fadeZoomIn .3s ease forwards;
-  --animation-fade-zoom-in-reverse: fadeZoomIn .3s ease reverse forwards;
+  --animation-fade-zoom-in-reverse: fadeZoomIn .3s ease forwards reverse;
 }
 
 
