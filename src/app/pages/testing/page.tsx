@@ -25,7 +25,7 @@ export default function TestingPage() {
       </div>
 
       <div className="flex w-full justify-between pb-8 px-8">
-        <NavLeft active={false} currentLink="" name={"Back"} />
+        <NavLeft active={true} currentLink="/" name={"Back"} />
 
         {processComplete === true && (
           <div className="animate-process-complete opacity-0">

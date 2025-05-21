@@ -57,6 +57,7 @@ export default function ResultsPage() {
     let navigationTimer: NodeJS.Timeout | undefined;
     if (selectedImage) {
       navigationTimer = setTimeout(() => {
+        alert("Successly Processed!")
         router.push("/pages/select");
       }, 2000);
     }
@@ -77,7 +78,7 @@ export default function ResultsPage() {
         <div
           className={`${
             isModal && "opacity-50"
-          }  transition-opacity duration-600 absolute right-8`}
+          }  transition-opacity duration-600 absolute mt-8 right-8`}
         >
           <h3 className="text-xs mb-2">Preview</h3>
           <div className=" flex justify-center items-center border border-gray-300 w-32 h-32">
@@ -96,13 +97,13 @@ export default function ResultsPage() {
           </>
         ) : (
           <>
-            <div className="flex w-full h-full justify-around ">
+            <div className="flex md:flex-row flex-col w-full h-full md:justify-around  justify-center items-center">
               <div className="flex justify-center items-center w-50 h-full relative">
                 <ShiftingLotus />
                 <div className="text-center relative">
                   {isModal ? (
-                    <div className="absolute top-0 left-0 translate-x-40 translate-y-4 bg-gray-900">
-                      <h3 className="uppercase text-white text-sm font-semibold w-80 p-4 pb-8 border border-x-0 border-t-0 border-white">
+                    <div className="z-5 absolute md:top-0 md:bottom-auto bottom-0 md:left-0 left-[50%] md:translate-x-40 translate-x-[-50%] md:translate-y-4 translate-y-45 bg-gray-900">
+                      <h3 className="uppercase text-white md:text-sm text-xs font-semibold md:w-80 w-60 p-4 pb-8 border border-x-0 border-t-0 border-white">
                         Allow A.I. to access you camera?
                       </h3>
                       <div className="uppercase text-xs py-2 px-4 flex gap-x-8 justify-end">
@@ -127,11 +128,11 @@ export default function ResultsPage() {
                     src={CameraIcon.src}
                   />
                   <img
-                    className="absolute top-0 right-0 translate-y-[-36px] translate-x-[36px] -z-1"
+                    className="absolute top-0 right-0 md:block hidden translate-y-[-36px] translate-x-[36px] -z-1"
                     src={Vector.src}
                     alt=""
                   />
-                  <h3 className="absolute text-left uppercase text-xs top-0 right-0 translate-y-[-64px] translate-x-[152px]">
+                  <h3 className="font-medium absolute text-left uppercase text-xs w-100 max-w-[120px] md:top-0 top-auto md:-right-2 right-[50%] md:translate-y-[-64px] md:translate-x-[152px] translate-x-[50%]">
                     Allow A.I. <br /> to scan your face
                   </h3>
                 </div>
@@ -149,11 +150,11 @@ export default function ResultsPage() {
                     src={GalleryIcon.src}
                   />
                   <img
-                    className="absolute rotate-180 bottom-0 left-0 translate-y-[20px] translate-x-[-48px] -z-1"
+                    className="absolute rotate-180 md:block hidden bottom-0 left-0 translate-y-[20px] translate-x-[-48px] -z-1"
                     src={Vector.src}
                     alt=""
                   />
-                  <h3 className="absolute text-right uppercase text-xs bottom-0 left-0 translate-y-[52px] translate-x-[-160px] ">
+                  <h3 className="font-medium absolute w-100 max-w-[120px] text-right uppercase text-xs md:bottom-0 bottom-auto md:top-auto top-0 -translate-y-8 md:left-0 left-[50%] md:translate-y-[52px] md:translate-x-[-168px] translate-x-[-50%]  ">
                     Allow A.I. <br /> access to Gallery
                   </h3>
                 </div>
@@ -167,7 +168,7 @@ export default function ResultsPage() {
             />
 
             <div className="flex w-full justify-between pb-8 px-8">
-              <NavLeft active={false} currentLink="" name={"Back"} />
+              <NavLeft active={true} currentLink="/pages/testing" name={"Back"} />
             </div>
           </>
         )}
