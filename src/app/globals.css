@@ -159,6 +159,6 @@ body {
   transform: scale(0.7); 
 }
 .diamond-hovered {
-  opacity: .3;
+  opacity: .15;
   transform: scale(1);
 }
