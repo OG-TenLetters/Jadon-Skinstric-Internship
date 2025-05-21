@@ -11,7 +11,23 @@ export default function CameraCapture() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
-  const router = useRouter()
+  const router = useRouter();
+
+  useEffect(() => {
+    let errorTimer: NodeJS.Timeout | undefined;
+    if (error) {
+      errorTimer = setTimeout(() => {
+        setError(null);
+        console.log("Error cleared after timeout.");
+      }, 5000);
+    }
+    return () => {
+      if (errorTimer) {
+        clearTimeout(errorTimer);
+        console.log("Error timeout cleared for cleanup.");
+      }
+    };
+  }, [error]);
 
   useEffect(() => {
     let currentStream: MediaStream | null = null;
@@ -125,7 +141,6 @@ export default function CameraCapture() {
   }, [capturedPhotoUrl]);
 
   const takePhoto = async () => {
-
     if (!videoRef.current || !canvasRef.current || !stream) {
       console.error("Video or canvas element not ready, or camera not active.");
       return;
@@ -165,31 +180,37 @@ export default function CameraCapture() {
     setError(null);
 
     setTimeout(() => {
-        if (videoRef.current && stream) {
-            const videoElement = videoRef.current;
-            videoElement.srcObject = stream;
-            const handleCanPlayThrough = () => {
-                videoElement.play().catch((playErr) => {
-                    setError("Failed to resume camera feed.")
-                });
-                videoElement.removeEventListener('canplaythrough', handleCanPlayThrough)
-            }
-            videoElement.addEventListener('canplaythrough', handleCanPlayThrough);
-            const handleLoadedMetadata = () => {
-                if (canvasRef.current) {
-                    canvasRef.current.width = videoElement.videoWidth;
-                    canvasRef.current.height = videoElement.videoHeight;
-                }
-                videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata); 
-            }
-                videoElement.addEventListener('loadedmetadata', handleLoadedMetadata)
-        } else {
-            console.warn("Retake: VideoRef or stream not available after timeout. Cannot resume playback")
-        }
-    }, 50)
-
-
-    }
+      if (videoRef.current && stream) {
+        const videoElement = videoRef.current;
+        videoElement.srcObject = stream;
+        const handleCanPlayThrough = () => {
+          videoElement.play().catch((playErr) => {
+            setError("Failed to resume camera feed.");
+          });
+          videoElement.removeEventListener(
+            "canplaythrough",
+            handleCanPlayThrough
+          );
+        };
+        videoElement.addEventListener("canplaythrough", handleCanPlayThrough);
+        const handleLoadedMetadata = () => {
+          if (canvasRef.current) {
+            canvasRef.current.width = videoElement.videoWidth;
+            canvasRef.current.height = videoElement.videoHeight;
+          }
+          videoElement.removeEventListener(
+            "loadedmetadata",
+            handleLoadedMetadata
+          );
+        };
+        videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+      } else {
+        console.warn(
+          "Retake: VideoRef or stream not available after timeout. Cannot resume playback"
+        );
+      }
+    }, 50);
+  };
   const keepPhoto = async () => {
     if (!capturedPhotoUrl || !canvasRef.current) {
       console.error("No photo to keep/upload.");
@@ -198,14 +219,19 @@ export default function CameraCapture() {
     }
     canvasRef.current.toBlob(async (blob) => {
       if (blob) {
-        console.log(blob)
+        console.log(blob);
       }
     }, "image/png");
-    router.push("/pages/select")
+    router.push("/pages/select");
   };
 
   return (
     <div className="overflow-hidden flex h-[90vh] mb-4 relative">
+      {error && (
+        <div className="animate-fade-in absolute rounded-full px-8 py-3 top-4 left-[50%] translate-x-[-50%] bg-[#5a0000] shadow-lg inset-shadow-[0_0_12px_8px] inset-shadow-[#270000] text-white text-sm font-bold flex justify-center md:w-auto w-[90%] md:max-w-[1000px] z-50">
+          {error}
+        </div>
+      )}
       {capturedPhotoUrl ? (
         <img
           src={capturedPhotoUrl}
@@ -223,33 +249,39 @@ export default function CameraCapture() {
       <canvas ref={canvasRef} className="hidden"></canvas>
       {capturedPhotoUrl ? (
         <>
-        <h3 className="absolute text-white top-32 left-[50%] translate-x-[-50%] font-semibold uppercase">Great Shot!</h3>
-        <div className="absolute text-center text-sm bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white font-semibold">
-          <h3 className="mb-4">Preview</h3>
-          <div className="p-2">
-            <button
-              onClick={() => retakePhoto()}
-              className="p-2 bg-white rounded-xs text-black transition-all duration-150 hover:brightness-90 cursor-pointer"
-            >
-              Retake
-            </button>
-            <button
-              onClick={() => keepPhoto()}
-              className="p-2 bg-gray-950 rounded-xs text-white ml-4 transition-all duration-150 hover:bg-gray-800 cursor-pointer"
-            >
-              Use This Photo
-            </button>
+          <h3 className="absolute text-white top-32 left-[50%] translate-x-[-50%] font-semibold uppercase">
+            Great Shot!
+          </h3>
+          <div className="absolute text-center text-sm bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white font-semibold">
+            <h3 className="mb-4">Preview</h3>
+            <div className="p-2 gap-2 flex sm:flex-row justify-center items-center flex-col">
+              <button
+                onClick={() => retakePhoto()}
+                className="p-2 bg-white rounded-xs text-black transition-all duration-150 hover:brightness-90 cursor-pointer"
+              >
+                Retake
+              </button>
+              <button
+                onClick={() => keepPhoto()}
+                className="p-2 bg-gray-950 rounded-xs text-white transition-all duration-150 hover:bg-gray-800 cursor-pointer"
+              >
+                Use This Photo
+              </button>
+            </div>
           </div>
-        </div>
         </>
       ) : (
         <>
           <div className="absolute text-center md:text-sm text-xs bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white uppercase font-semibold">
             <h2 className="mb-4"> to get better results, make sure to have</h2>
             <div className="flex md:gap-0 gap-6 justify-center">
-              <h3 className="md:w-full w-16 text-center">◇ Neutral Expression</h3>
+              <h3 className="md:w-full w-16 text-center">
+                ◇ Neutral Expression
+              </h3>
               <h3 className="md:w-full w-16 text-center">◇ Frontal Pose</h3>
-              <h3 className="md:w-full w-16 text-center">◇ Adequate Lighting</h3>
+              <h3 className="md:w-full w-16 text-center">
+                ◇ Adequate Lighting
+              </h3>
             </div>
           </div>
           <div className="flex md:flex-row flex-col items-center gap-4 absolute md:right-8 md:top-[50%] md:translate-y-[-50%] right-[50%] bottom-40 md:translate-x-0 translate-x-[50%]">
@@ -265,7 +297,12 @@ export default function CameraCapture() {
       )}
 
       <div className="absolute text-white md:bottom-8 md:top-auto top-8 left-8 ">
-        <NavLeft active={true} currentLink="/pages/results" triangleVariant="white" name="Back" />
+        <NavLeft
+          active={true}
+          currentLink="/pages/results"
+          triangleVariant="white"
+          name="Back"
+        />
       </div>
     </div>
   );
