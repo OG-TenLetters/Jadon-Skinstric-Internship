@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import DynamicForm from "../../components/DynamicForm";
 import NavLeft from "../../components/NavLeft";
 import NavRight from "../../components/NavRight";
@@ -29,9 +28,7 @@ export default function TestingPage() {
 
         {processComplete === true && (
           <div className="animate-process-complete opacity-0">
-            <Link href="/pages/results">
-              <NavRight name={"Proceed"} />
-            </Link>
+              <NavRight currentLink="/pages/results" name={"Proceed"} />
           </div>
         )}
       </div>

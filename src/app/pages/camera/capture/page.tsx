@@ -298,7 +298,7 @@ export default function CameraCapture() {
 
       <div className="absolute text-white md:bottom-8 md:top-auto top-8 left-8 ">
         <NavLeft
-          active={true}
+          defaulted={false}
           currentLink="/pages/results"
           triangleVariant="white"
           name="Back"

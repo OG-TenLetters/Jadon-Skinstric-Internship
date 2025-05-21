@@ -9,6 +9,17 @@
   }
 }
 
+@keyframes fadeZoomIn {
+    0% {
+    opacity: 0;
+    scale: 70%;
+  }
+  100% {
+    opacity: 1;
+    scale: 100%;
+  }
+}
+
 @keyframes rotate1 {
   0% {
     rotate: -45deg;
@@ -110,6 +121,8 @@
   --animation-small-jiggle: smallJiggle 2s ease infinite;
   --animation-big-jiggle: bigJiggle 2s ease infinite;
   --animation-small-jiggle-delay: smallJiggle 2s ease 1.2s infinite;
+  --animation-fade-zoom-in: fadeZoomIn .3s ease forwards;
+  --animation-fade-zoom-in-reverse: fadeZoomIn .3s ease reverse forwards;
 }
 
 
@@ -137,6 +150,12 @@
 }
 .animate-fade-in {
   animation: var(--animation-fade-in);
+}
+.animate-fade-zoom-in {
+  animation: var(--animation-fade-zoom-in);
+}
+.animate-fade-zoom-in-reverse {
+  animation: var(--animation-fade-zoom-in-reverse);
 }
 
 .animate-small-jiggle {

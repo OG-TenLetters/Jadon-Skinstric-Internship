@@ -6,20 +6,20 @@ import WhiteTriangle from "../assets/svgs/sharp-triangle-white.svg";
 
 interface NavLeftProps {
   name: string;
-  active: boolean;
+  defaulted: boolean;
   currentLink: string;
   triangleVariant?: "white" | "black";
 }
 
 export default function NavLeft({
   name,
-  active,
+  defaulted,
   currentLink,
   triangleVariant = "black",
 }: NavLeftProps) {
   const router = useRouter();
   const handleClick = () => {
-    if (active === true) {
+    if (defaulted === false) {
       router.push(currentLink);
     } else {
       router.back();

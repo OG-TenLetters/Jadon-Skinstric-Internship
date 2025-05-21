@@ -22,7 +22,6 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-    console.log("Current stage:", currentStage, "Input value:", inputValue);
   }, [currentStage]);
 
   useEffect(() => {
@@ -90,7 +89,6 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
-                console.log("Input changed:", e.target.value);
               }}
               onKeyDown={handleKeyDown}
               placeholder={getPlaceholder()}
