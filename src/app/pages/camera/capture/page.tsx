@@ -257,15 +257,15 @@ export default function CameraCapture() {
         </>
       ) : (
         <>
-          <div className="absolute text-center text-sm bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white uppercase font-semibold">
+          <div className="absolute text-center md:text-sm text-xs bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white uppercase font-semibold">
             <h2 className="mb-4"> to get better results, make sure to have</h2>
-            <div className="flex gap-8">
-              <h3 className="lg:w-full w-16 text-center">◇ Neutral Expression</h3>
-              <h3 className="lg:w-full w-16 text-center">◇ Frontal Pose</h3>
-              <h3 className="lg:w-full w-16 text-center">◇ Adequate Lighting</h3>
+            <div className="flex md:gap-0 gap-6 justify-center">
+              <h3 className="md:w-full w-16 text-center">◇ Neutral Expression</h3>
+              <h3 className="md:w-full w-16 text-center">◇ Frontal Pose</h3>
+              <h3 className="md:w-full w-16 text-center">◇ Adequate Lighting</h3>
             </div>
           </div>
-          <div className="flex lg:flex-row flex-col items-center gap-4 absolute lg:right-8 lg:top-[50%] lg:translate-y-[-50%] right-[50%] bottom-40 translate-x-[50%]">
+          <div className="flex md:flex-row flex-col items-center gap-4 absolute md:right-8 md:top-[50%] md:translate-y-[-50%] right-[50%] bottom-40 md:translate-x-0 translate-x-[50%]">
             <h3 className="text-white uppercase font-bold">Take Picture</h3>
             <img
               onClick={takePhoto}
@@ -277,7 +277,7 @@ export default function CameraCapture() {
         </>
       )}
 
-      <div className="absolute text-white bottom-8 left-8">
+      <div className="absolute text-white md:bottom-8 md:top-auto top-8 left-8 ">
         <NavLeft active={true} currentLink="/pages/results" triangleVariant="white" name="Back" />
       </div>
     </div>
