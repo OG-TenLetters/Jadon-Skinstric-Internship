@@ -98,13 +98,15 @@
 
 
 @theme {
-  --animation-process-complete: processComplete 1.5s ease forwards;
+  --animation-process-complete: processComplete 1.5s ease .6s forwards;
   --animation-fade-in: fadeIn 1.5s ease forwards;
   --animation-fade-in-delay: fadeIn 1.5s ease .6s forwards;
   --animation-rotate-slow1: rotate1 100s linear infinite;
   --animation-rotate-slow2: rotate2 90s linear infinite;
   --animation-rotate-slow3: rotate3 80s linear infinite;
   --animation-rotate-slow4: rotate4 70s linear infinite;
+  --animation-rotate-fast: rotate1 30s linear infinite;
+  --animation-rotate-fastest: rotate1 10s linear infinite;
   --animation-small-jiggle: smallJiggle 2s ease infinite;
   --animation-big-jiggle: bigJiggle 2s ease infinite;
   --animation-small-jiggle-delay: smallJiggle 2s ease 1.2s infinite;
@@ -122,6 +124,12 @@
 }
 .animate-rotate-slow4 {
   animation: var(--animation-rotate-slow4);
+}
+.animate-rotate-fast {
+  animation: var(--animation-rotate-fast);
+}
+.animate-rotate-fastest {
+  animation: var(--animation-rotate-fastest);
 }
 
 .animate-process-complete {

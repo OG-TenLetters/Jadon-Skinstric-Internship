@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Dot from "../assets/svgs/circle.svg";
+import LoadingDots from "./LoadingDots";
 
 interface DynamicFormProps {
   setProcessComplete: (isComplete: boolean) => void;
@@ -44,11 +44,9 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
   });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log("Key pressed:", event.key);
     if (event.key === "Enter") {
       event.preventDefault();
       const trimmedValue = inputValue.trim();
-      console.log("Enter pressed. Trimmed value:", trimmedValue);
       if (trimmedValue === "") {
         alert("Please enter text before pressing Enter! It can be fake");
         return;
@@ -57,13 +55,11 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
         setName(trimmedValue);
         setCurrentStage("city");
         setInputValue("");
-        console.log("Stage changed to city. Name set:", trimmedValue);
       } else if (currentStage === "city") {
         setCity(trimmedValue);
         setCurrentStage("completed");
         setIsProcessing(true);
         setInputValue("");
-        console.log("Stage completed. City set:", trimmedValue);
         console.log("Final Collected Data (on client):", {
           name,
           city: trimmedValue,
@@ -105,23 +101,7 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
         ) : isProcessing ? (
           <>
             <p className="mb-4">Processing submission</p>
-            <div className="flex justify-center gap-2">
-              <img
-                className="animate-small-jiggle w-1.5 h-1.5"
-                src={Dot.src}
-                alt=""
-              />
-              <img
-                className="animate-big-jiggle w-1.5 h-1.5"
-                src={Dot.src}
-                alt=""
-              />
-              <img
-                className="animate-small-jiggle-delay w-1.5 h-1.5"
-                src={Dot.src}
-                alt=""
-              />
-            </div>
+            <LoadingDots />
           </>
         ) : (
           <div>
