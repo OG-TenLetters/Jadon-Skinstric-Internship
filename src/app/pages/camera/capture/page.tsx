@@ -226,7 +226,7 @@ export default function CameraCapture() {
   };
 
   return (
-    <div className="overflow-hidden flex h-[90vh] mb-4 relative">
+    <div className="overflow-hidden flex md:pt-0 pt-17 md:h-[90vh] h-[98vh] mb-4 relative">
       {error && (
         <div className="animate-fade-in absolute rounded-full px-8 py-3 top-4 left-[50%] translate-x-[-50%] bg-[#5a0000] shadow-lg inset-shadow-[0_0_12px_8px] inset-shadow-[#270000] text-white text-sm font-bold flex justify-center md:w-auto w-[90%] md:max-w-[1000px] z-50">
           {error}
@@ -296,7 +296,7 @@ export default function CameraCapture() {
         </>
       )}
 
-      <div className="absolute text-white md:bottom-8 md:top-auto top-8 left-8 ">
+      <div className="absolute text-white md:bottom-8 md:top-auto top-24 left-8 ">
         <NavLeft
           defaulted={false}
           currentLink="/pages/results"

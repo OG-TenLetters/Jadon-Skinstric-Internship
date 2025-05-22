@@ -71,7 +71,7 @@ export default function ResultsPage() {
 
   return (
     <>
-      <div className="flex flex-col justify-between items-start h-[93vh]">
+      <div className="flex flex-col justify-between items-start md:pt-0 pt-20 h-[93vh]">
         <div className="ml-8 uppercase font-semibold text-sm">
           To Start Analysis
         </div>
