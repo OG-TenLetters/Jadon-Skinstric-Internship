@@ -6,17 +6,59 @@ import LoadingDots from "./LoadingDots";
 interface DynamicFormProps {
   setProcessComplete: (isComplete: boolean) => void;
 }
+interface SubmissionData {
+  name: string;
+  city: string;
+}
+interface ApiResponse {
+  message: string;
+}
 
 export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
   const [currentStage, setCurrentStage] = useState<
     "name" | "city" | "completed"
   >("name");
   const [name, setName] = useState<string>("");
-  const [city, setCity] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const sendForm = async (dataToSend: SubmissionData): Promise<ApiResponse> => {
+    const apiUrl =
+      "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseOne";
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      if (!response.ok) {
+        let errorDetail: { message?: string } = {
+          message: "An unknown error occurred",
+        };
+        try {
+          errorDetail = await response.json();
+        } catch (e) {
+          console.error("Failed to parse error response:", e);
+        }
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${
+            errorDetail.message || response.statusText
+          }`
+        );
+      }
+      const responseData = await response.json();
+      console.log("Success:", responseData);
+      return responseData;
+    } catch (error) {
+      console.error("Error sending data:", error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
     if (inputRef.current) {
@@ -40,9 +82,11 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
     if (currentStage === "completed" && !isProcessing) {
       setProcessComplete(true);
     }
-  });
+  }, [currentStage, isProcessing, setProcessComplete]);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (event.key === "Enter") {
       event.preventDefault();
       const trimmedValue = inputValue.trim();
@@ -50,19 +94,36 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
         alert("Please enter text before pressing Enter! It can be fake");
         return;
       }
+
+      const textOnlyRegex = /^[a-zA-Z\s-,]+$/;
+
+      if (!textOnlyRegex.test(trimmedValue)) {
+        alert("Please enter valid text (letters and space only).");
+        return;
+      }
+
       if (currentStage === "name") {
         setName(trimmedValue);
         setCurrentStage("city");
         setInputValue("");
       } else if (currentStage === "city") {
-        setCity(trimmedValue);
-        setCurrentStage("completed");
+        const dataToSubmit: SubmissionData = {
+          name: name,
+          city: trimmedValue,
+        };
         setIsProcessing(true);
         setInputValue("");
-        console.log("Final Collected Data (on client):", {
-          name,
-          city: trimmedValue,
-        });
+
+        try {
+          const responseData = await sendForm(dataToSubmit);
+          console.log("Form submission successful:", responseData);
+          setCurrentStage("completed");
+        } catch (error) {
+          console.error("Form submission failed:", error);
+          setIsProcessing(false);
+         
+          setCurrentStage("city");
+        }
       }
     }
   };
@@ -70,7 +131,7 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
   const getPlaceholder = () => {
     if (currentStage === "name") {
       return "Introduce Yourself";
-    } else if (currentStage == "city" && name) {
+    } else if (currentStage === "city" && name) {
       return `Your City, ${name}?`;
     }
     return "";
