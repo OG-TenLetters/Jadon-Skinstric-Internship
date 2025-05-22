@@ -6,8 +6,12 @@ import NavRight from "@/app/components/NavRight";
 import RadioButton from "../../assets/images/radioButton.webp";
 import ActiveRadioButton from "../../assets/images/activeRadioButton.webp";
 import Image from "next/image";
+import TempComponent from "@/app/components/TempComponent";
+import { useState } from "react";
 
 export default function SummaryPage() {
+    const [currentPercentage, setCurrentPercentage] = useState(0)
+    const [currentData, setCurrentData] = useState([])
   return (
     <>
       <div className="flex flex-col md:pt-0 pt-20 justify-between items-start h-[93vh]">
@@ -33,7 +37,7 @@ export default function SummaryPage() {
             <h2 className="text-3xl md:block hidden">Southeast Asian</h2>
                 <div className="flex md:justify-end justify-center w-full">
                   <CircleProgressBar
-                    percentage={20}
+                    percentage={currentPercentage}
                     size={400}
                     strokeWidth={5}
                     circleColor="#d8d8d8"
@@ -50,23 +54,13 @@ export default function SummaryPage() {
               <h3>RACE</h3>
               <h3>A.I. CONFIDENCE</h3>
             </div>
-            <div
-              tabIndex={0}
-              className="focus:bg-black focus:text-white hover:bg-gray-300 flex justify-between p-4 font-semibold"
-            >
-              {}
-              <div className="flex gap-3 items-center">
-                <Image
-                  className="w-3 h-3"
-                  src={RadioButton}
-                  alt="Radio Button icon"
-                  width={RadioButton.width}
-                  height={RadioButton.height}
-                />
-                <h3>Southeast asian</h3>
-              </div>
-              <div>98%</div>
-            </div>
+            <TempComponent state={() => setCurrentPercentage(8)} ethnicity={"Southeast Asian"} percentage={8} />
+            <TempComponent state={() => setCurrentPercentage(6)} ethnicity={"Latino Hispanic"} percentage={6} />
+            <TempComponent state={() => setCurrentPercentage(36)} ethnicity={"Black"} percentage={36} />
+            <TempComponent state={() => setCurrentPercentage(50)} ethnicity={"White"} percentage={50} />
+            <TempComponent state={() => setCurrentPercentage(0)} ethnicity={"South Asian"} percentage={0} />
+            <TempComponent state={() => setCurrentPercentage(0)} ethnicity={"East Asian"} percentage={0} />
+            <TempComponent state={() => setCurrentPercentage(0)} ethnicity={"Middle Eastern"} percentage={0} />
 
           </div>
         </div>
