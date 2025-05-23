@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { ImageApiProvider } from "./hooks/ImageApiContext";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -31,7 +32,9 @@ export default function RootLayout({
             Enter Code
           </button>
         </nav>
+        <ImageApiProvider>
         {children}
+        </ImageApiProvider>
       </body>
     </html>
   );

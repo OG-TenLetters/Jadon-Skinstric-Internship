@@ -71,7 +71,7 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
     if (currentStage === "completed" && isProcessing) {
       timer = setTimeout(() => {
         setIsProcessing(false);
-      }, 5000);
+      }, 3000);
     }
     return () => {
       clearTimeout(timer);
@@ -111,8 +111,8 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
           name: name,
           location: trimmedValue,
         };
-        setIsProcessing(true);
         setInputValue("");
+        setIsProcessing(true)
 
         try {
           const responseData = await sendForm(dataToSubmit);

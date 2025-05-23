@@ -8,10 +8,13 @@ import ActiveRadioButton from "../../assets/images/activeRadioButton.webp";
 import Image from "next/image";
 import TempComponent from "@/app/components/TempComponent";
 import { useState } from "react";
+import { useImageApi } from "@/app/hooks/ImageApiContext";
 
 export default function SummaryPage() {
     const [currentPercentage, setCurrentPercentage] = useState(0)
     const [currentData, setCurrentData] = useState([])
+    const { demographics, loading ,error} = useImageApi()
+    console.log(demographics)
   return (
     <>
       <div className="flex flex-col md:pt-0 pt-20 justify-between items-start h-[93vh]">
@@ -22,16 +25,27 @@ export default function SummaryPage() {
         </div>
         <div className="flex md:flex-row flex-col  w-[100%] justify-center p-8 items-start gap-3">
           <div className="lg:w-[12%] md:w-[20%] w-[100%] flex flex-col gap-2">
-            {Array.from({ length: 3 }).map((_, index) => (
               <div
-                key={index}
                 tabIndex={0}
                 className="focus:bg-black focus:text-white bg-gray-100 p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize "
               >
                 <h3>Southeast asian</h3>
                 <h3>RACE</h3>
               </div>
-            ))}
+              <div
+                tabIndex={0}
+                className="focus:bg-black focus:text-white bg-gray-100 p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize "
+              >
+                <h3>50-59</h3>
+                <h3>AGE</h3>
+              </div>
+              <div
+                tabIndex={0}
+                className="focus:bg-black focus:text-white bg-gray-100 p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize "
+              >
+                <h3>MALE</h3>
+                <h3>SEX</h3>
+              </div>
           </div>
           <div className="flex flex-col bg-gray-100 p-4 border border-x-0 border-b-0 lg:w-[65%] md:w-[50%] w-[100%] md:gap-16 gap-4">
             <h2 className="text-3xl md:block hidden">Southeast Asian</h2>
@@ -54,14 +68,11 @@ export default function SummaryPage() {
               <h3>RACE</h3>
               <h3>A.I. CONFIDENCE</h3>
             </div>
-            <TempComponent state={() => setCurrentPercentage(8)} ethnicity={"Southeast Asian"} percentage={8} />
-            <TempComponent state={() => setCurrentPercentage(6)} ethnicity={"Latino Hispanic"} percentage={6} />
-            <TempComponent state={() => setCurrentPercentage(36)} ethnicity={"Black"} percentage={36} />
-            <TempComponent state={() => setCurrentPercentage(50)} ethnicity={"White"} percentage={50} />
-            <TempComponent state={() => setCurrentPercentage(0)} ethnicity={"South Asian"} percentage={0} />
-            <TempComponent state={() => setCurrentPercentage(0)} ethnicity={"East Asian"} percentage={0} />
-            <TempComponent state={() => setCurrentPercentage(0)} ethnicity={"Middle Eastern"} percentage={0} />
-
+            {/* {
+              demographics?.age?.map((item, index) => (
+                <TempComponent key={index} state={() => setCurrentPercentage(8)} ethnicity={"Southeast Asian"} percentage={8} />
+              ))
+            } */}
           </div>
         </div>
         <div className="flex bg-white w-full justify-between  p-8 sm:text-[16px] text-[12px] md:static fixed md:bottom-auto bottom-0">

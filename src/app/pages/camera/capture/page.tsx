@@ -4,15 +4,19 @@ import NavLeft from "@/app/components/NavLeft";
 import { useEffect, useRef, useState } from "react";
 import CaptureIcon from "../../../assets/svgs/camera-capture.svg";
 import { useRouter } from "next/navigation";
+import { SendImageData } from "@/app/components/SendImageData";
+import ShiftingLotus from "@/app/components/ShiftingLotus";
+import LoadingDots from "@/app/components/LoadingDots";
+import { useImageApi } from "@/app/hooks/ImageApiContext";
 
 export default function CameraCapture() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [base64Image, setBase64Image] = useState<string | null>(null);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const { sendImage, loading, apiResponse } = useImageApi();
 
   const router = useRouter();
 
@@ -137,11 +141,11 @@ export default function CameraCapture() {
 
   useEffect(() => {
     return () => {
-      if (capturedPhotoUrl) {
-        URL.revokeObjectURL(capturedPhotoUrl);
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage);
       }
     };
-  }, [capturedPhotoUrl]);
+  }, [selectedImage]);
 
   const takePhoto = async () => {
     if (!videoRef.current || !canvasRef.current || !stream) {
@@ -167,7 +171,7 @@ export default function CameraCapture() {
     canvas.toBlob((blob) => {
       if (blob) {
         const url = URL.createObjectURL(blob);
-        setCapturedPhotoUrl(url);
+        setSelectedImage(url);
         setError(null);
       } else {
         setError("Failed to convert canvas to image (Blob was null).");
@@ -175,10 +179,9 @@ export default function CameraCapture() {
     }, "image.png");
   };
   const retakePhoto = () => {
-    if (capturedPhotoUrl) {
-      URL.revokeObjectURL(capturedPhotoUrl);
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage);
     }
-    setCapturedPhotoUrl(null);
     setBase64Image(null);
     setError(null);
 
@@ -215,7 +218,7 @@ export default function CameraCapture() {
     }, 50);
   };
   const keepPhoto = async () => {
-    if (!capturedPhotoUrl || !canvasRef.current) {
+    if (!selectedImage || !canvasRef.current) {
       console.error("No photo to keep/upload.");
       setError("No photo to keep.");
       return;
@@ -229,8 +232,6 @@ export default function CameraCapture() {
         }, "image/png");
       });
 
-      console.log("Blob created in keepPhoto:", blob);
-
       const base64String: string = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -240,13 +241,7 @@ export default function CameraCapture() {
           reject(new Error("FileReader error: " + e.target?.error?.message));
         reader.readAsDataURL(blob);
       });
-
       setBase64Image(base64String);
-      console.log(
-        "Base64 Image for API (full data URL stored):",
-        base64String.substring(0, 100) + "..."
-      );
-      router.push("/pages/select");
     } catch (err: any) {
       console.error("Error during image conversion:", err);
       const errorMessage = err.message || "Failed to convert photo for upload.";
@@ -255,87 +250,142 @@ export default function CameraCapture() {
     }
   };
 
-  console.log(base64Image);
+  useEffect(() => {
+    if (base64Image) {
+      const processImage = async () => {
+        try {
+          await sendImage(base64Image);
+          router.push("/pages/select");
+        } catch (error: any) {
+          console.error("Analysis failed:", error);
+          alert(`Analysis failed: ${error.message || "Unknown error"}`);
+          setSelectedImage(null);
+          setBase64Image(null);
+        }
+      };
+      processImage();
+    }
+  }, [base64Image, router, sendImage]);
+
+  console.log("Current base64Image (API):", base64Image ? "Ready" : "Null");
 
   return (
-    <div className="overflow-hidden flex md:pt-0 pt-17 md:h-[90vh] h-[98vh] mb-4 relative">
-      {error && (
-        <div className="animate-fade-in absolute rounded-full px-8 py-3 top-4 left-[50%] translate-x-[-50%] bg-[#5a0000] shadow-lg inset-shadow-[0_0_12px_8px] inset-shadow-[#270000] text-white text-sm font-bold flex justify-center md:w-auto w-[90%] md:max-w-[1000px] z-50">
-          {error}
-        </div>
-      )}
-      {capturedPhotoUrl ? (
-        <img
-          src={capturedPhotoUrl}
-          alt="Captured from camera"
-          className="-scale-x-100 h-auto w-[100%] object-cover"
-        />
-      ) : (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          className="-scale-x-100 h-auto w-[100%] object-cover"
-        ></video>
-      )}
-      <canvas ref={canvasRef} className="hidden"></canvas>
-      {capturedPhotoUrl ? (
+    <>
+      {loading ? (
         <>
-          <h3 className="absolute text-white top-32 left-[50%] translate-x-[-50%] font-semibold uppercase">
-            Great Shot!
-          </h3>
-          <div className="absolute text-center text-sm bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white font-semibold">
-            <h3 className="mb-4">Preview</h3>
-            <div className="p-2 gap-2 flex sm:flex-row justify-center items-center flex-col">
-              <button
-                onClick={() => retakePhoto()}
-                className="p-2 bg-white rounded-xs text-black transition-all duration-150 hover:brightness-90 cursor-pointer"
-              >
-                Retake
-              </button>
-              <button
-                onClick={() => keepPhoto()}
-                className="p-2 bg-gray-950 rounded-xs text-white transition-all duration-150 hover:bg-gray-800 cursor-pointer"
-              >
-                Use This Photo
-              </button>
+          <div className="flex flex-col justify-between items-start md:pt-0 pt-20 md:h-[93vh] h-[100vh]">
+            <div className="ml-8 uppercase font-semibold text-sm">
+              To Start Analysis
             </div>
+            <div className="absolute right-8 top-16">
+              <h3 className="text-xs mb-2">Preview</h3>
+              <div className=" flex justify-center items-center border border-gray-300 w-32 h-32">
+                {selectedImage ? <img src={selectedImage} alt="" /> : null}
+              </div>
+            </div>
+            {selectedImage || loading ? (
+              <>
+                <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] animate-rotate-fast">
+                  <ShiftingLotus />
+                </div>
+                <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+                  <p className="mb-4">Processing submission</p>
+                  <LoadingDots />
+                </div>
+              </>
+            ) : null}
           </div>
         </>
       ) : (
         <>
-          <div className="absolute text-center md:text-sm text-xs bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white uppercase font-semibold">
-            <h2 className="mb-4"> to get better results, make sure to have</h2>
-            <div className="flex md:gap-0 gap-6 justify-center">
-              <h3 className="md:w-full w-16 text-center">
-                ◇ Neutral Expression
-              </h3>
-              <h3 className="md:w-full w-16 text-center">◇ Frontal Pose</h3>
-              <h3 className="md:w-full w-16 text-center">
-                ◇ Adequate Lighting
-              </h3>
-            </div>
-          </div>
-          <div className="flex md:flex-row flex-col items-center gap-4 absolute md:right-8 md:top-[50%] md:translate-y-[-50%] right-[50%] bottom-40 md:translate-x-0 translate-x-[50%]">
-            <h3 className="text-white uppercase font-bold">Take Picture</h3>
-            <img
-              onClick={takePhoto}
-              className="scale-120 transition-all duration-300 hover:scale-132 hover:opacity-90"
-              src={CaptureIcon.src}
-              alt=""
-            />
-          </div>
-        </>
-      )}
+          <div className="overflow-hidden flex md:pt-0 pt-17 md:h-[90vh] h-[98vh] mb-4 relative">
+            {error && (
+              <div className="animate-fade-in absolute rounded-full px-8 py-3 top-4 left-[50%] translate-x-[-50%] bg-[#5a0000] shadow-lg inset-shadow-[0_0_12px_8px] inset-shadow-[#270000] text-white text-sm font-bold flex justify-center md:w-auto w-[90%] md:max-w-[1000px] z-50">
+                {error}
+              </div>
+            )}
+            {selectedImage ? (
+              <img
+                src={selectedImage}
+                alt="Captured from camera"
+                className="-scale-x-100 h-auto w-[100%] object-cover"
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="-scale-x-100 h-auto w-[100%] object-cover"
+              ></video>
+            )}
+            <canvas ref={canvasRef} className="hidden"></canvas>
+            {selectedImage ? (
+              <>
+                <h3 className="absolute text-white top-32 left-[50%] translate-x-[-50%] font-semibold uppercase">
+                  Great Shot!
+                </h3>
+                <div className="absolute text-center text-sm bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white font-semibold">
+                  <h3 className="mb-4">Preview</h3>
+                  <div className="p-2 gap-2 flex sm:flex-row justify-center items-center flex-col">
+                    <button
+                      onClick={() => retakePhoto()}
+                      className="p-2 bg-white rounded-xs text-black transition-all duration-150 hover:brightness-90 cursor-pointer"
+                    >
+                      Retake
+                    </button>
+                    <button
+                      onClick={() => keepPhoto()}
+                      className="p-2 bg-gray-950 rounded-xs text-white transition-all duration-150 hover:bg-gray-800 cursor-pointer"
+                    >
+                      Use This Photo
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="absolute text-center md:text-sm text-xs bottom-0 left-[50%] translate-x-[-50%] -translate-y-8 text-white uppercase font-semibold">
+                  <h2 className="mb-4">
+                    {" "}
+                    to get better results, make sure to have
+                  </h2>
+                  <div className="flex md:gap-0 gap-6 justify-center">
+                    <h3 className="md:w-full w-16 text-center">
+                      ◇ Neutral Expression
+                    </h3>
+                    <h3 className="md:w-full w-16 text-center">
+                      ◇ Frontal Pose
+                    </h3>
+                    <h3 className="md:w-full w-16 text-center">
+                      ◇ Adequate Lighting
+                    </h3>
+                  </div>
+                </div>
+                <div className="flex md:flex-row flex-col items-center gap-4 absolute md:right-8 md:top-[50%] md:translate-y-[-50%] right-[50%] bottom-40 md:translate-x-0 translate-x-[50%]">
+                  <h3 className="text-white uppercase font-bold">
+                    Take Picture
+                  </h3>
+                  <img
+                    onClick={takePhoto}
+                    className="scale-120 transition-all duration-300 hover:scale-132 hover:opacity-90"
+                    src={CaptureIcon.src}
+                    alt=""
+                  />
+                </div>
+              </>
+            )}
 
-      <div className="absolute text-white md:bottom-8 md:top-auto top-24 left-8 ">
-        <NavLeft
-          defaulted={false}
-          currentLink="/pages/results"
-          triangleVariant="white"
-          name="Back"
-        />
-      </div>
-    </div>
+            <div className="absolute text-white md:bottom-8 md:top-auto top-24 left-8 ">
+              <NavLeft
+                defaulted={false}
+                currentLink="/pages/results"
+                triangleVariant="white"
+                name="Back"
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 }
