@@ -8,12 +8,18 @@ import Link from "next/link";
 import ShiftingLotus from "@/app/components/ShiftingLotus";
 import LoadingDots from "@/app/components/LoadingDots";
 import { useRouter } from "next/navigation";
+import { SendImageData } from "@/app/components/SendImageData";
+
 
 export default function ResultsPage() {
   const [isModal, setIsModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [isProcessingApi, setIsProcessingApi] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   const router = useRouter();
+
 
   const openFileExplorer = () => {
     if (fileInputRef.current) {
@@ -23,17 +29,31 @@ export default function ResultsPage() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+    setApiError(null);
     if (files && files.length > 0) {
       const file = files[0];
 
       if (file.type.startsWith("image/")) {
         const imageUrl = URL.createObjectURL(file);
         setSelectedImage(imageUrl);
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          setBase64Image(reader.result as string);
+          console.log("Base64 Image for API:", reader.result);
+        };
+        reader.onerror = (error) => {
+          console.error("FileReader error: ", error);
+          setBase64Image(null);
+        };
+        reader.readAsDataURL(file);
       } else {
         setSelectedImage(null);
+        setBase64Image(null);
       }
     } else {
       setSelectedImage(null);
+      setBase64Image(null);
     }
     event.target.value = "";
   };
@@ -54,24 +74,47 @@ export default function ResultsPage() {
   }, [selectedImage]);
 
   useEffect(() => {
-    let navigationTimer: NodeJS.Timeout | undefined;
-    if (selectedImage) {
-      navigationTimer = setTimeout(() => {
-        alert("Image analyzed successfully!")
-        router.push("/pages/select");
-      }, 2000);
+    let apiCallTimeout: NodeJS.Timeout | undefined;
+
+    if (base64Image) {
+      setIsProcessingApi(true);
+      setApiError(null);
+
+      apiCallTimeout = setTimeout(async () => {
+        try {
+          const response = await SendImageData(base64Image);
+          alert("Image analyzed successfully!");
+          router.push("/pages/select");
+        } catch (error: any) {
+          setApiError(error.message || "Failed to analyze image.");
+          console.error("Analysis failed:", error);
+          alert(`Analysis failed: ${error.message || "Unknown error"}`);
+          setSelectedImage(null);
+          setBase64Image(null);
+        } finally {
+          setIsProcessingApi(false);
+        }
+      }, 500);
     }
+
     return () => {
-      if (navigationTimer) {
-        clearTimeout(navigationTimer);
-        console.log("Navigation timer cleared.");
+      if (apiCallTimeout) {
+        clearTimeout(apiCallTimeout);
+      }
+      if (base64Image) {
+        setSelectedImage(null);
+        setBase64Image(null);
       }
     };
-  }, [selectedImage, router]);
+  }, [base64Image, router]);
 
+  console.log("Current selectedImage (preview):", selectedImage);
+  console.log("Current base64Image (API):", base64Image ? "Ready" : "Null");
+  console.log("Is API Processing:", isProcessingApi);
+  console.log("API Error:", apiError);
   return (
     <>
-      <div className="flex flex-col justify-between items-start md:pt-0 pt-20 h-[93vh]">
+      <div className="flex flex-col justify-between items-start md:pt-0 pt-20 md:h-[93vh] h-[100vh]">
         <div className="ml-8 uppercase font-semibold text-sm">
           To Start Analysis
         </div>
@@ -85,7 +128,7 @@ export default function ResultsPage() {
             {selectedImage ? <img src={selectedImage} alt="" /> : null}
           </div>
         </div>
-        {selectedImage ? (
+        {selectedImage || isProcessingApi ? (
           <>
             <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] animate-rotate-fast">
               <ShiftingLotus />
@@ -168,7 +211,11 @@ export default function ResultsPage() {
             />
 
             <div className="flex w-full justify-between pb-8 px-8">
-              <NavLeft defaulted={false} currentLink="/pages/testing" name={"Back"} />
+              <NavLeft
+                defaulted={false}
+                currentLink="/pages/testing"
+                name={"Back"}
+              />
             </div>
           </>
         )}

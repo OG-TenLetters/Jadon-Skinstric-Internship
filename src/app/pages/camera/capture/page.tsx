@@ -11,6 +11,9 @@ export default function CameraCapture() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
+  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -148,7 +151,6 @@ export default function CameraCapture() {
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-
     const context = canvas.getContext("2d");
 
     if (!context) {
@@ -177,6 +179,7 @@ export default function CameraCapture() {
       URL.revokeObjectURL(capturedPhotoUrl);
     }
     setCapturedPhotoUrl(null);
+    setBase64Image(null);
     setError(null);
 
     setTimeout(() => {
@@ -217,13 +220,42 @@ export default function CameraCapture() {
       setError("No photo to keep.");
       return;
     }
-    canvasRef.current.toBlob(async (blob) => {
-      if (blob) {
-        console.log(blob);
-      }
-    }, "image/png");
-    router.push("/pages/select");
+
+    try {
+      const blob: Blob = await new Promise((resolve, reject) => {
+        canvasRef.current!.toBlob((b) => {
+          if (b) resolve(b);
+          else reject(new Error("Failed to create blob from canvas."));
+        }, "image/png");
+      });
+
+      console.log("Blob created in keepPhoto:", blob);
+
+      const base64String: string = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve(reader.result as string);
+        };
+        reader.onerror = (e) =>
+          reject(new Error("FileReader error: " + e.target?.error?.message));
+        reader.readAsDataURL(blob);
+      });
+
+      setBase64Image(base64String);
+      console.log(
+        "Base64 Image for API (full data URL stored):",
+        base64String.substring(0, 100) + "..."
+      );
+      router.push("/pages/select");
+    } catch (err: any) {
+      console.error("Error during image conversion:", err);
+      const errorMessage = err.message || "Failed to convert photo for upload.";
+      setError(errorMessage);
+      setBase64Image(null);
+    }
   };
+
+  console.log(base64Image);
 
   return (
     <div className="overflow-hidden flex md:pt-0 pt-17 md:h-[90vh] h-[98vh] mb-4 relative">

@@ -8,7 +8,7 @@ interface DynamicFormProps {
 }
 interface SubmissionData {
   name: string;
-  city: string;
+  location: string;
 }
 interface ApiResponse {
   message: string;
@@ -109,7 +109,7 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
       } else if (currentStage === "city") {
         const dataToSubmit: SubmissionData = {
           name: name,
-          city: trimmedValue,
+          location: trimmedValue,
         };
         setIsProcessing(true);
         setInputValue("");

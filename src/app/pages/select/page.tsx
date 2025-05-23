@@ -21,7 +21,7 @@ export default function SelectPage() {
 
   return (
     <>
-      <div className="flex flex-col justify-between items-start md:pt-0 pt-20 h-[93vh]">
+      <div className="flex flex-col justify-between items-start md:pt-0 pt-20 md:h-[93vh] h-[100vh]">
         <div className="ml-8 text-sm">
           <h3 className="font-semibold">A.I. ANALYsis</h3>
           <h3>A.I. HAS ESTIMATED THE FOLLOWING:</h3>
