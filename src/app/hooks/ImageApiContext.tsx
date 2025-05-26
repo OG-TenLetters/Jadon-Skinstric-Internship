@@ -33,13 +33,13 @@ interface GenderProbabilities {
 
 // Interface for the 'race' probabilities
 interface RaceProbabilities {
-  black?: number;
+  "black"?: number;
   "east asian"?: number; // Note: Keys with spaces need quotes
   "latino hispanic"?: number;
   "middle eastern"?: number;
   "south asian"?: number;
   "southeast asian"?: number;
-  white?: number;
+  "white"?: number;
   // If there could be other race keys not explicitly listed:
   [key: string]: number | undefined;
 }
