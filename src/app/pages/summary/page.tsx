@@ -15,7 +15,7 @@ export default function SummaryPage() {
     null
   );
 
-  const [activeDemoCat, setActiveDemoCat] = useState<"race" | "age" | "gender">(
+  const [activeDemoCat, setActiveDemoCat] = useState<"race" | "age" | "sex">(
     "race"
   );
   const [selectedRaceDetails, setSelectedRaceDetails] = useState<{
@@ -79,7 +79,7 @@ export default function SummaryPage() {
         currentSelectedDetailsForCategory = selectedAgeDetails;
         setSelectedDetailsForCategoryCallback = setSelectedAgeDetails;
         break;
-      case "gender":
+      case "sex":
         dataToScan = demographics.gender;
         currentSelectedDetailsForCategory = selectedGenderDetails;
         setSelectedDetailsForCategoryCallback = setSelectedGenderDetails;
@@ -124,14 +124,14 @@ export default function SummaryPage() {
       case "age":
         setSelectedAgeDetails(detailsToSet);
         break;
-      case "gender":
+      case "sex":
         setSelectedGenderDetails(detailsToSet);
         break;
     }
   };
 
   const handleDemographicsCategoryChange = (
-    category: "race" | "age" | "gender"
+    category: "race" | "age" | "sex"
   ) => {
     setActiveDemoCat(category);
   };
@@ -170,10 +170,10 @@ export default function SummaryPage() {
               <h3>AGE</h3>
             </div>
             <div
-              onClick={() => handleDemographicsCategoryChange("gender")}
+              onClick={() => handleDemographicsCategoryChange("sex")}
               tabIndex={0}
               className={`${
-                activeDemoCat === "gender" && selectedGenderDetails
+                activeDemoCat === "sex" && selectedGenderDetails
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
@@ -183,7 +183,7 @@ export default function SummaryPage() {
             </div>
           </div>
           <div className="flex flex-col bg-gray-100 p-4 border border-x-0 border-b-0 lg:w-[65%] md:w-[50%] w-[100%] md:gap-16 gap-4">
-            <h2 className="text-3xl md:block hidden">Southeast Asian</h2>
+            <h2 className="text-3xl md:block hidden capitalize">{activeDemoCat}: {highlightedItemKey}</h2>
             <div className="flex md:justify-end justify-center w-full">
               <CircleProgressBar
                 percentage={currentPercentage}
@@ -200,7 +200,7 @@ export default function SummaryPage() {
           </div>
           <div className="lg:w-[23%] md:w-[30%] w-[100%] h-full bg-gray-100 border border-x-0 border-b-0">
             <div className="flex justify-between p-4 font-semibold">
-              <h3>RACE</h3>
+              <h3 className="uppercase">{activeDemoCat}</h3>
               <h3>A.I. CONFIDENCE</h3>
             </div>
             {activeDemoCat === "race" &&
@@ -239,7 +239,7 @@ export default function SummaryPage() {
                   />
                 );
               })}
-            {activeDemoCat === "gender" &&
+            {activeDemoCat === "sex" &&
               Object.entries(demographics?.gender ?? {}).map((item, index) => {
                 const rawValue = Number(item[1]);
                 const isValidNumber =

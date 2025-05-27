@@ -7,8 +7,6 @@ interface ImageSubmissionData {
 }
 
 
-// Interface for the 'age' probabilities
-// The keys are strings (like "0-2", "10-19") and values are numbers (percentages)
 interface AgeProbabilities {
   "0-2"?: number;
   "3-9"?: number;
