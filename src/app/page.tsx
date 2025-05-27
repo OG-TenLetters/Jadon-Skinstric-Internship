@@ -5,6 +5,8 @@ import Link from "next/link";
 import NavRight from "./components/NavRight";
 import NavLeft from "./components/NavLeft";
 
+
+
 export default function Home() {
   const leftTriggerRef = useRef<HTMLDivElement>(null);
   const rightTriggerRef = useRef<HTMLDivElement>(null);
