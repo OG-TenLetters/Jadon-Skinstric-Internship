@@ -52,7 +52,6 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
         );
       }
       const responseData = await response.json();
-      console.log("Success:", responseData);
       return responseData;
     } catch (error) {
       console.error("Error sending data:", error);
@@ -116,7 +115,6 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
 
         try {
           const responseData = await sendForm(dataToSubmit);
-          console.log("Form submission successful:", responseData);
           setCurrentStage("completed");
         } catch (error) {
           console.error("Form submission failed:", error);

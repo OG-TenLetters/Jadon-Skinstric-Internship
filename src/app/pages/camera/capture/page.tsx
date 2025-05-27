@@ -25,13 +25,11 @@ export default function CameraCapture() {
     if (error) {
       errorTimer = setTimeout(() => {
         setError(null);
-        console.log("Error cleared after timeout.");
       }, 5000);
     }
     return () => {
       if (errorTimer) {
         clearTimeout(errorTimer);
-        console.log("Error timeout cleared for cleanup.");
       }
     };
   }, [error]);
@@ -89,9 +87,6 @@ export default function CameraCapture() {
 
     return () => {
       if (currentStream) {
-        console.log(
-          "Component unmounting or stream being replaced. Stopping camera stream."
-        );
         currentStream.getTracks().forEach((track) => track.stop());
         setStream(null);
       }
@@ -267,7 +262,6 @@ export default function CameraCapture() {
     }
   }, [base64Image, router, sendImage]);
 
-  console.log("Current base64Image (API):", base64Image ? "Ready" : "Null");
 
   return (
     <>

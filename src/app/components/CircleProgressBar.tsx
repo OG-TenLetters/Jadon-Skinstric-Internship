@@ -8,7 +8,7 @@ interface CircleProgressBarProps {
   progressColor?: string;
   textColor?: string;
   className?: string;
-  animationDuration?: number; // Optional: make animation duration configurable
+  animationDuration?: number;
 }
 
 

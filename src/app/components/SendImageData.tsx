@@ -24,7 +24,6 @@ export const SendImageData = async (imageData: string): Promise<ImageApiResponse
 
     const dataToSend: ImageSubmissionData = { image: base64WithoutPrefix }; 
 
-    console.log("Sending data to API:", dataToSend);
 
     const response = await fetch(API_ENDPOINT_PHASE_TWO, {
       method: 'POST',
@@ -47,7 +46,6 @@ export const SendImageData = async (imageData: string): Promise<ImageApiResponse
     }
 
     const responseData: ImageApiResponse = await response.json();
-    console.log('API Success Response:', responseData);
     const SuccessfulApiData = createContext(responseData)
 
     return responseData;

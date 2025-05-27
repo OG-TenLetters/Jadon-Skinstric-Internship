@@ -7,17 +7,15 @@ import TempComponent from "@/app/components/TempComponent";
 import { useEffect, useState } from "react";
 import { useImageApi } from "@/app/hooks/ImageApiContext";
 
-
 export default function SummaryPage() {
   const [currentPercentage, setCurrentPercentage] = useState(0);
-
 
   const { demographics, loading, error } = useImageApi();
   const [highlightedItemKey, setHighlightedItemKey] = useState<string | null>(
     null
   );
 
-  const [activeDemocat, setActiveDemoCat] = useState<"race" | "age" | "gender">(
+  const [activeDemoCat, setActiveDemoCat] = useState<"race" | "age" | "gender">(
     "race"
   );
   const [selectedRaceDetails, setSelectedRaceDetails] = useState<{
@@ -70,7 +68,7 @@ export default function SummaryPage() {
       React.SetStateAction<{ key: string; percentage: number } | null>
     >;
 
-    switch (activeDemocat) {
+    switch (activeDemoCat) {
       case "race":
         dataToScan = demographics.race;
         currentSelectedDetailsForCategory = selectedRaceDetails;
@@ -101,12 +99,17 @@ export default function SummaryPage() {
       } else {
         setHighlightedItemKey(null);
         setCurrentPercentage(0);
+        setSelectedDetailsForCategoryCallback(null);
       }
+    } else {
+      setHighlightedItemKey(null);
+      setCurrentPercentage(0);
+      setSelectedDetailsForCategoryCallback(null);
     }
   }, [
     demographics,
     loading,
-    activeDemocat,
+    activeDemoCat,
     selectedRaceDetails,
     selectedAgeDetails,
     selectedGenderDetails,
@@ -114,7 +117,7 @@ export default function SummaryPage() {
 
   const handleItemClick = (itemKey: string, percentageNum: number) => {
     const detailsToSet = { key: itemKey, percentage: percentageNum };
-    switch (activeDemocat) {
+    switch (activeDemoCat) {
       case "race":
         setSelectedRaceDetails(detailsToSet);
         break;
@@ -134,7 +137,7 @@ export default function SummaryPage() {
   };
   return (
     <>
-      <div className="flex flex-col md:pt-0 pt-20 justify-between items-start h-[93vh]">
+      <div className="flex flex-col md:pt-0 pt-20 justify-between items-start h-[92vh]">
         <div className="ml-8 text-sm">
           <h3 className="font-semibold">A.I. ANALYsis</h3>
           <h3 className="sm:text-5xl text-3xl">DEMOGRAPHICS</h3>
@@ -146,36 +149,36 @@ export default function SummaryPage() {
               onClick={() => handleDemographicsCategoryChange("race")}
               tabIndex={0}
               className={`${
-                activeDemocat === "race"
+                activeDemoCat === "race" && selectedRaceDetails
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
             >
-              <h3>{highlightedItemKey}</h3>
+              <h3>{selectedRaceDetails?.key}</h3>
               <h3>RACE</h3>
             </div>
             <div
               onClick={() => handleDemographicsCategoryChange("age")}
               tabIndex={0}
               className={`${
-                activeDemocat === "age"
+                activeDemoCat === "age" && selectedAgeDetails
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
             >
-              <h3>{highlightedItemKey}</h3>
+              <h3>{selectedAgeDetails?.key}</h3>
               <h3>AGE</h3>
             </div>
             <div
               onClick={() => handleDemographicsCategoryChange("gender")}
               tabIndex={0}
               className={`${
-                activeDemocat === "gender"
+                activeDemoCat === "gender" && selectedGenderDetails
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
             >
-              <h3>{highlightedItemKey}</h3>
+              <h3>{selectedGenderDetails?.key}</h3>
               <h3>SEX</h3>
             </div>
           </div>
@@ -200,7 +203,7 @@ export default function SummaryPage() {
               <h3>RACE</h3>
               <h3>A.I. CONFIDENCE</h3>
             </div>
-            {activeDemocat === "race" &&
+            {activeDemoCat === "race" &&
               Object.entries(demographics?.race ?? {}).map((item, index) => {
                 const rawValue = Number(item[1]);
                 const isValidNumber =
@@ -218,7 +221,7 @@ export default function SummaryPage() {
                   />
                 );
               })}
-            {activeDemocat === "age" &&
+            {activeDemoCat === "age" &&
               Object.entries(demographics?.age ?? {}).map((item, index) => {
                 const rawValue = Number(item[1]);
                 const isValidNumber =
@@ -236,7 +239,7 @@ export default function SummaryPage() {
                   />
                 );
               })}
-            {activeDemocat === "gender" &&
+            {activeDemoCat === "gender" &&
               Object.entries(demographics?.gender ?? {}).map((item, index) => {
                 const rawValue = Number(item[1]);
                 const isValidNumber =

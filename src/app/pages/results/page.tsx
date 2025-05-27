@@ -36,7 +36,6 @@ export default function ResultsPage() {
 
         reader.onloadend = () => {
           setBase64Image(reader.result as string);
-          console.log("Base64 Image for API:", reader.result);
         };
         reader.onerror = (error) => {
           console.error("FileReader error: ", error);

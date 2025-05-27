@@ -19,32 +19,26 @@ interface AgeProbabilities {
   "50-59"?: number;
   "60-69"?: number;
   "70+"?: number;
-  // If there could be other age keys not explicitly listed, use an index signature:
   [key: string]: number | undefined;
 }
 
-// Interface for the 'gender' probabilities
 interface GenderProbabilities {
   male?: number;
   female?: number;
-  // If there could be other gender keys not explicitly listed:
   [key: string]: number | undefined;
 }
 
-// Interface for the 'race' probabilities
 interface RaceProbabilities {
   "black"?: number;
-  "east asian"?: number; // Note: Keys with spaces need quotes
+  "east asian"?: number; 
   "latino hispanic"?: number;
   "middle eastern"?: number;
   "south asian"?: number;
   "southeast asian"?: number;
   "white"?: number;
-  // If there could be other race keys not explicitly listed:
   [key: string]: number | undefined;
 }
 
-// This interface represents the 'data' object from your API response
 interface DemographicsData {
   age?: AgeProbabilities;
   gender?: GenderProbabilities;
@@ -92,7 +86,6 @@ export const SendImageData = async (
 
     const dataToSend: ImageSubmissionData = { image: base64WithoutPrefix };
 
-    console.log("Sending data to API:", dataToSend);
 
     const response = await fetch(API_ENDPOINT_PHASE_TWO, {
       method: "POST",
@@ -119,7 +112,6 @@ export const SendImageData = async (
     }
 
     const responseData: ImageApiResponse = await response.json();
-       console.log("API Success Response (FULL DATA):", responseData); // <-- ADD THIS
     return responseData;
   } catch (error: any) {
     console.error("Error in sendImageToSkinstricPhaseTwo:", error);
