@@ -47,9 +47,9 @@ export default function TempComponent({
           />
         )}
 
-        <h3>{ethnicity}</h3>
+        <h3 className="capitalize">{ethnicity}</h3>
       </div>
-      <div>{percentage}%</div>
+      <div>{percentage.toFixed(2)}%</div>
     </div>
   );
 }

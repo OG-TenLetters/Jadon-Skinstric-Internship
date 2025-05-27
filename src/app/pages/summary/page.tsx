@@ -7,83 +7,131 @@ import TempComponent from "@/app/components/TempComponent";
 import { useEffect, useState } from "react";
 import { useImageApi } from "@/app/hooks/ImageApiContext";
 
-interface handleDemographicsProps {
-  selectRace: boolean;
-  selectAge: boolean;
-  selectGender: boolean;
-}
+
 export default function SummaryPage() {
   const [currentPercentage, setCurrentPercentage] = useState(0);
-  const [race, setRace] = useState(true);
-  const [age, setAge] = useState(false);
-  const [gender, setGender] = useState(false);
+
+
   const { demographics, loading, error } = useImageApi();
   const [highlightedItemKey, setHighlightedItemKey] = useState<string | null>(
     null
   );
 
-  const handleItemClick = (itemKey: string, newPercentage: number) => {
-    setHighlightedItemKey(itemKey);
-    setCurrentPercentage(newPercentage);
-  };
+  const [activeDemocat, setActiveDemoCat] = useState<"race" | "age" | "gender">(
+    "race"
+  );
+  const [selectedRaceDetails, setSelectedRaceDetails] = useState<{
+    key: string;
+    percentage: number;
+  } | null>(null);
+  const [selectedAgeDetails, setSelectedAgeDetails] = useState<{
+    key: string;
+    percentage: number;
+  } | null>(null);
+  const [selectedGenderDetails, setSelectedGenderDetails] = useState<{
+    key: string;
+    percentage: number;
+  } | null>(null);
 
-  const handleDemographics = ({
-    selectRace,
-    selectAge,
-    selectGender,
-  }: handleDemographicsProps) => {
-    if (selectRace) {
-      setAge(false);
-      setGender(false);
-      setRace(true);
-    } else if (selectAge) {
-      setGender(false);
-      setRace(false);
-      setAge(true);
-    } else if (selectGender) {
-      setRace(false);
-      setAge(false);
-      setGender(true);
+  const findMaxInCategory = (
+    data: Record<string, number> | undefined
+  ): { key: string; percentage: number } | null => {
+    if (!data) return null;
+    let maxKey: string | null = null;
+    let maxValue = -1;
+
+    for (const [key, value] of Object.entries(data)) {
+      const numValue = Number(value);
+      if (
+        typeof numValue === "number" &&
+        !isNaN(numValue) &&
+        numValue > maxValue
+      ) {
+        maxValue = numValue;
+        maxKey = key;
+      }
     }
+    return maxKey ? { key: maxKey, percentage: maxValue * 100 } : null;
   };
 
   useEffect(() => {
-    if (!loading && demographics?.race) {
-      let dataToScan: Record<string, number> | undefined;
+    if (loading || !demographics) {
+      setHighlightedItemKey(null);
+      setCurrentPercentage(0);
+      return;
+    }
 
-      if (race && demographics.race) {
+    let dataToScan: Record<string, number | number> | undefined;
+    let currentSelectedDetailsForCategory: {
+      key: string;
+      percentage: number;
+    } | null = null;
+    let setSelectedDetailsForCategoryCallback: React.Dispatch<
+      React.SetStateAction<{ key: string; percentage: number } | null>
+    >;
+
+    switch (activeDemocat) {
+      case "race":
         dataToScan = demographics.race;
-      } else if (age && demographics.age) {
+        currentSelectedDetailsForCategory = selectedRaceDetails;
+        setSelectedDetailsForCategoryCallback = setSelectedRaceDetails;
+        break;
+      case "age":
         dataToScan = demographics.age;
-      } else if (gender && demographics.gender) {
+        currentSelectedDetailsForCategory = selectedAgeDetails;
+        setSelectedDetailsForCategoryCallback = setSelectedAgeDetails;
+        break;
+      case "gender":
         dataToScan = demographics.gender;
-      }
-
-      if (dataToScan) {
-        let maxKey: string | null = null;
-        let maxValue = -1;
-
-        for (const [key, value] of Object.entries(dataToScan)) {
-          const numValue = Number(value);
-          if (
-            typeof numValue === "number" &&
-            !isNaN(numValue) &&
-            numValue > maxValue
-          ) {
-            maxValue = numValue;
-            maxKey = key;
-          }
-        }
-        if (maxKey !== null) {
-          setCurrentPercentage(maxValue * 100);
-          setHighlightedItemKey(maxKey);
-        } else {
-          setCurrentPercentage(0);
-          setHighlightedItemKey(null);
-        }
+        currentSelectedDetailsForCategory = selectedGenderDetails;
+        setSelectedDetailsForCategoryCallback = setSelectedGenderDetails;
+        break;
+      default:
+        return;
+    }
+    if (currentSelectedDetailsForCategory) {
+      setHighlightedItemKey(currentSelectedDetailsForCategory.key);
+      setCurrentPercentage(currentSelectedDetailsForCategory.percentage);
+    } else if (dataToScan) {
+      const maxItem = findMaxInCategory(dataToScan);
+      if (maxItem) {
+        setHighlightedItemKey(maxItem.key);
+        setCurrentPercentage(maxItem.percentage);
+        setSelectedDetailsForCategoryCallback(maxItem);
+      } else {
+        setHighlightedItemKey(null);
+        setCurrentPercentage(0);
       }
     }
-  }, [demographics, loading, race, age, gender]);
+  }, [
+    demographics,
+    loading,
+    activeDemocat,
+    selectedRaceDetails,
+    selectedAgeDetails,
+    selectedGenderDetails,
+  ]);
+
+  const handleItemClick = (itemKey: string, percentageNum: number) => {
+    const detailsToSet = { key: itemKey, percentage: percentageNum };
+    switch (activeDemocat) {
+      case "race":
+        setSelectedRaceDetails(detailsToSet);
+        break;
+      case "age":
+        setSelectedAgeDetails(detailsToSet);
+        break;
+      case "gender":
+        setSelectedGenderDetails(detailsToSet);
+        break;
+    }
+  };
+
+  const handleDemographicsCategoryChange = (
+    category: "race" | "age" | "gender"
+  ) => {
+    setActiveDemoCat(category);
+  };
   return (
     <>
       <div className="flex flex-col md:pt-0 pt-20 justify-between items-start h-[93vh]">
@@ -95,57 +143,39 @@ export default function SummaryPage() {
         <div className="flex md:flex-row flex-col  w-[100%] justify-center p-8 items-start gap-3">
           <div className="lg:w-[12%] md:w-[20%] w-[100%] flex flex-col gap-2">
             <div
-              onClick={() =>
-                handleDemographics({
-                  selectRace: true,
-                  selectAge: false,
-                  selectGender: false,
-                })
-              }
+              onClick={() => handleDemographicsCategoryChange("race")}
               tabIndex={0}
               className={`${
-                race
+                activeDemocat === "race"
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
             >
-              <h3>Southeast asian</h3>
+              <h3>{highlightedItemKey}</h3>
               <h3>RACE</h3>
             </div>
             <div
-              onClick={() =>
-                handleDemographics({
-                  selectRace: false,
-                  selectAge: true,
-                  selectGender: false,
-                })
-              }
+              onClick={() => handleDemographicsCategoryChange("age")}
               tabIndex={0}
               className={`${
-                age
+                activeDemocat === "age"
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
             >
-              <h3>50-59</h3>
+              <h3>{highlightedItemKey}</h3>
               <h3>AGE</h3>
             </div>
             <div
-              onClick={() =>
-                handleDemographics({
-                  selectRace: false,
-                  selectAge: false,
-                  selectGender: true,
-                })
-              }
+              onClick={() => handleDemographicsCategoryChange("gender")}
               tabIndex={0}
               className={`${
-                gender
+                activeDemocat === "gender"
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-100 text-black hover:bg-gray-300"
               } p-4 flex flex-col justify-between md:h-[108px] border border-black border-x-0 border-b-0 font-bold hover:bg-gray-300 capitalize `}
             >
-              <h3>MALE</h3>
+              <h3>{highlightedItemKey}</h3>
               <h3>SEX</h3>
             </div>
           </div>
@@ -170,69 +200,60 @@ export default function SummaryPage() {
               <h3>RACE</h3>
               <h3>A.I. CONFIDENCE</h3>
             </div>
-            {race
-              ? Object.entries(demographics?.race ?? {}).map((item, index) => {
-                  const rawValue = Number(item[1]);
-                  const isValidNumber =
-                    typeof rawValue === "number" && !isNaN(rawValue);
-                  const percentageNum = isValidNumber ? rawValue * 100 : 0;
+            {activeDemocat === "race" &&
+              Object.entries(demographics?.race ?? {}).map((item, index) => {
+                const rawValue = Number(item[1]);
+                const isValidNumber =
+                  typeof rawValue === "number" && !isNaN(rawValue);
+                const percentageNum = isValidNumber ? rawValue * 100 : 0;
 
-                  return (
-                    <TempComponent
-                      key={index}
-                      itemKey={item[0]}
-                      state={() => setCurrentPercentage(percentageNum)}
-                      ethnicity={item[0]}
-                      percentage={percentageNum.toFixed(2)}
-                      isHighlighted={item[0] === highlightedItemKey}
-                      handleItemClick={() => handleItemClick()}
-                    />
-                  );
-                })
-              : null}
-            {age
-              ? Object.entries(demographics?.age ?? {}).map((item, index) => {
-                  const rawValue = Number(item[1]);
-                  const isValidNumber =
-                    typeof rawValue === "number" && !isNaN(rawValue);
-                  const percentageNum = isValidNumber ? rawValue * 100 : 0;
+                return (
+                  <TempComponent
+                    key={index}
+                    itemKey={item[0]}
+                    ethnicity={item[0]}
+                    percentage={percentageNum}
+                    isHighlighted={item[0] === highlightedItemKey}
+                    onItemsClick={handleItemClick}
+                  />
+                );
+              })}
+            {activeDemocat === "age" &&
+              Object.entries(demographics?.age ?? {}).map((item, index) => {
+                const rawValue = Number(item[1]);
+                const isValidNumber =
+                  typeof rawValue === "number" && !isNaN(rawValue);
+                const percentageNum = isValidNumber ? rawValue * 100 : 0;
 
-                  return (
-                    <TempComponent
-                      key={index}
-                      itemKey={item[0]}
-                      state={() => setCurrentPercentage(percentageNum)}
-                      ethnicity={item[0]}
-                      percentage={percentageNum.toFixed(2)}
-                      isHighlighted={item[0] === highlightedItemKey}
-                      handleItemClick={() => handleItemClick()}
-                    />
-                  );
-                })
-              : null}
-            {gender
-              ? Object.entries(demographics?.gender ?? {}).map(
-                  (item, index) => {
-                    const rawValue = Number(item[1]);
-                    const isValidNumber =
-                      typeof rawValue === "number" && !isNaN(rawValue);
-                    const percentageNum = isValidNumber ? rawValue * 100 : 0;
+                return (
+                  <TempComponent
+                    key={index}
+                    itemKey={item[0]}
+                    ethnicity={item[0]}
+                    percentage={percentageNum}
+                    isHighlighted={item[0] === highlightedItemKey}
+                    onItemsClick={handleItemClick}
+                  />
+                );
+              })}
+            {activeDemocat === "gender" &&
+              Object.entries(demographics?.gender ?? {}).map((item, index) => {
+                const rawValue = Number(item[1]);
+                const isValidNumber =
+                  typeof rawValue === "number" && !isNaN(rawValue);
+                const percentageNum = isValidNumber ? rawValue * 100 : 0;
 
-                    return (
-                      <TempComponent
-                        key={index}
-                        itemKey={item[0]}
-                      
-                        state={() => setCurrentPercentage(percentageNum)}
-                        ethnicity={item[0]}
-                        percentage={percentageNum.toFixed(2)}
-                        isHighlighted={item[0] === highlightedItemKey}
-                        handleItemClick={() => handleItemClick()}
-                      />
-                    );
-                  }
-                )
-              : null}
+                return (
+                  <TempComponent
+                    key={index}
+                    itemKey={item[0]}
+                    ethnicity={item[0]}
+                    percentage={percentageNum}
+                    isHighlighted={item[0] === highlightedItemKey}
+                    onItemsClick={handleItemClick}
+                  />
+                );
+              })}
           </div>
         </div>
         <div className="flex bg-white w-full justify-between  p-8 sm:text-[16px] text-[12px] md:static fixed md:bottom-auto bottom-0">
