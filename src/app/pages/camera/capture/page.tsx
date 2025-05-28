@@ -173,17 +173,20 @@ export default function CameraCapture() {
       }
     }, "image.png");
   };
+
   const retakePhoto = () => {
     if (selectedImage) {
       URL.revokeObjectURL(selectedImage);
     }
     setBase64Image(null);
     setError(null);
+    setSelectedImage(null)
 
     setTimeout(() => {
       if (videoRef.current && stream) {
         const videoElement = videoRef.current;
         videoElement.srcObject = stream;
+
         const handleCanPlayThrough = () => {
           videoElement.play().catch((playErr) => {
             setError("Failed to resume camera feed.");
@@ -194,6 +197,7 @@ export default function CameraCapture() {
           );
         };
         videoElement.addEventListener("canplaythrough", handleCanPlayThrough);
+
         const handleLoadedMetadata = () => {
           if (canvasRef.current) {
             canvasRef.current.width = videoElement.videoWidth;
@@ -205,6 +209,7 @@ export default function CameraCapture() {
           );
         };
         videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+         videoElement.play().catch(e => console.warn("Retake: Immediate play attempt failed", e));
       } else {
         console.warn(
           "Retake: VideoRef or stream not available after timeout. Cannot resume playback"
@@ -262,6 +267,7 @@ export default function CameraCapture() {
     }
   }, [base64Image, router, sendImage]);
 
+  console.log(retakePhoto)
 
   return (
     <>

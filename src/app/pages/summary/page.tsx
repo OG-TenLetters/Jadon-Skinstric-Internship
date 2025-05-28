@@ -10,7 +10,7 @@ import { useImageApi } from "@/app/hooks/ImageApiContext";
 export default function SummaryPage() {
   const [currentPercentage, setCurrentPercentage] = useState(0);
 
-  const { demographics, loading, error } = useImageApi();
+  const { demographics, loading } = useImageApi();
   const [highlightedItemKey, setHighlightedItemKey] = useState<string | null>(
     null
   );
@@ -32,7 +32,7 @@ export default function SummaryPage() {
   } | null>(null);
 
   const findMaxInCategory = (
-    data: Record<string, number> | undefined
+    data: Record<string, number | undefined > | undefined
   ): { key: string; percentage: number } | null => {
     if (!data) return null;
     let maxKey: string | null = null;
@@ -59,7 +59,7 @@ export default function SummaryPage() {
       return;
     }
 
-    let dataToScan: Record<string, number | number> | undefined;
+    let dataToScan: Record<string, number | undefined> | undefined;
     let currentSelectedDetailsForCategory: {
       key: string;
       percentage: number;
