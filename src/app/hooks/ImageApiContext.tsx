@@ -138,7 +138,7 @@ export const ImageApiProvider = ({ children }: ImageApiProviderProps) => {
       if (data && typeof data.data === 'object' && data.data !== null) {
         setDemographics(data.data as DemographicsData)
       }
-    } catch (err: unknown ) {
+    } catch {
       setApiResponse(null);
     } finally {
       setLoading(false);
