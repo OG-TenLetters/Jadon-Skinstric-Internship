@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { ImageApiProvider } from "./hooks/ImageApiContext";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -21,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${notoSans.className} antialiased`}>
-        <nav className="flex items-center h-[7vh] text-xs justify-between">
+        <nav className="flex items-center h-[7vh] text-xs justify-between md:static fixed w-[100%] bg-white">
           <div className="flex gap-4 sm:px-8 pl-4 tracking-wide">
             <Link href="/" className="font-bold">sKINsTRIC</Link>
             <div className="text-gray-500">[ INTRO ]</div>
@@ -31,7 +32,9 @@ export default function RootLayout({
             Enter Code
           </button>
         </nav>
+        <ImageApiProvider>
         {children}
+        </ImageApiProvider>
       </body>
     </html>
   );

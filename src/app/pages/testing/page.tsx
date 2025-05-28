@@ -9,7 +9,7 @@ export default function TestingPage() {
   const [processComplete, setProcessComplete] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col justify-between items-start h-[93vh]">
+    <div className="flex flex-col justify-between items-start md:pt-0 pt-20 md:h-[93vh] h-[100vh]">
       <div className="ml-8 uppercase font-semibold text-sm">
         To Start Analysis
       </div>

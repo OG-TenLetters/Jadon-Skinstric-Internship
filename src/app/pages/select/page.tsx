@@ -21,7 +21,7 @@ export default function SelectPage() {
 
   return (
     <>
-      <div className="flex flex-col justify-between items-start h-[93vh]">
+      <div className="flex flex-col justify-between items-start md:pt-0 pt-20 md:h-[93vh] h-[100vh]">
         <div className="ml-8 text-sm">
           <h3 className="font-semibold">A.I. ANALYsis</h3>
           <h3>A.I. HAS ESTIMATED THE FOLLOWING:</h3>
@@ -62,7 +62,7 @@ export default function SelectPage() {
               ref={rightSelect}
               onMouseEnter={() => setIsRightSelectHovered(true)}
               onMouseLeave={() => setIsRightSelectHovered(false)}
-              className="sm:w-45 sm:h-45 w-28 h-28 bg-[#ebebeb] hover:bg-[#c1c3c9] flex justify-center items-center"
+              className="cursor-not-allowed sm:w-45 sm:h-45 w-28 h-28 bg-[#ebebeb] hover:bg-[#c1c3c9] flex justify-center items-center"
             >
               <p className="-rotate-45 sm:text-lg text-xs">SKIN TYPE DETAILs</p>
             </div>
@@ -70,7 +70,7 @@ export default function SelectPage() {
               ref={leftSelect}
               onMouseEnter={() => setIsLeftSelectHovered(true)}
               onMouseLeave={() => setIsLeftSelectHovered(false)}
-              className="sm:w-45 sm:h-45 w-28 h-28 bg-[#ebebeb] hover:bg-[#c1c3c9] flex justify-center items-center"
+              className="cursor-not-allowed sm:w-45 sm:h-45 w-28 h-28 bg-[#ebebeb] hover:bg-[#c1c3c9] flex justify-center items-center"
             >
               <p className="-rotate-45 sm:text-lg text-xs">
                 COSMETIC
@@ -81,7 +81,7 @@ export default function SelectPage() {
               ref={bottomSelect}
               onMouseEnter={() => setIsBottomSelectHovered(true)}
               onMouseLeave={() => setIsBottomSelectHovered(false)}
-              className="sm:w-45 sm:h-45 w-28 h-28 bg-[#ebebeb] hover:bg-[#c1c3c9] flex justify-center items-center"
+              className="cursor-not-allowed sm:w-45 sm:h-45 w-28 h-28 bg-[#ebebeb] hover:bg-[#c1c3c9] flex justify-center items-center"
             >
               <p className="-rotate-45 sm:text-lg text-xs">WEATHER</p>
             </div>
