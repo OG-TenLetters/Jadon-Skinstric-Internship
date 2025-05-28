@@ -137,13 +137,13 @@ export default function SummaryPage() {
   };
   return (
     <>
-      <div className="flex flex-col md:pt-0 pt-20 justify-between items-start h-[92vh]">
+      <div className="flex flex-col md:pt-0 pt-20 pb-40 justify-between items-start h-[92vh]">
         <div className="ml-8 text-sm">
           <h3 className="font-semibold">A.I. ANALYsis</h3>
           <h3 className="sm:text-5xl text-3xl">DEMOGRAPHICS</h3>
           <h3>PREDICTED RACE & AGE</h3>
         </div>
-        <div className="flex md:flex-row flex-col  w-[100%] justify-center p-8 items-start gap-3">
+        <div className="flex md:flex-row flex-col  w-[100%] justify-center p-8 pb-40 items-start gap-3">
           <div className="lg:w-[12%] md:w-[20%] w-[100%] flex flex-col gap-2">
             <div
               onClick={() => handleDemographicsCategoryChange("race")}

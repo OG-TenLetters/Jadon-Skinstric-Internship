@@ -116,7 +116,7 @@ export default function Home() {
       <div className="lg:hidden block">
         <Link
           href="/pages/testing"
-          className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex"
+          className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex justify-center"
         >
           <div className="uppercase font-bold sm:text-sm text-xs">
             enter experience
@@ -134,7 +134,7 @@ export default function Home() {
         <div
           className={`${
             demographics === null ? "hidden" : ""
-          } text-sm font-bold mt-5`}
+          } sm:hover:scale-105 hover:scale-85 transition-scale duration-300 text-sm sm:scale-100 scale-80 font-bold mt-3`}
         >
           <NavLeft
             defaulted={false}
