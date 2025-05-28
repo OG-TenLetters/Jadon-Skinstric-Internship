@@ -3,7 +3,7 @@ import CameraIcon from "../../assets/svgs/camera.svg";
 import CountdownProgressBar from "@/app/components/CountdownProgressBar";
 import Image from "next/image";
 
-export default function () {
+export default function CameraPage() {
   return (
     <div className="overflow-hidden justify-center items-center flex flex-col h-[90vh] mb-4 relative">
       <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] animate-rotate-fastest">

@@ -111,7 +111,7 @@ export const SendImageData = async (
 
     const responseData: ImageApiResponse = await response.json();
     return responseData;
-  } catch (error: any[] | unknown) {
+  } catch (error: unknown) {
     console.error("Error in sendImageToSkinstricPhaseTwo:", error);
     throw error;
   }
@@ -138,7 +138,7 @@ export const ImageApiProvider = ({ children }: ImageApiProviderProps) => {
       if (data && typeof data.data === 'object' && data.data !== null) {
         setDemographics(data.data as DemographicsData)
       }
-    } catch (err: unknown | null ) {
+    } catch (err: unknown ) {
       setApiResponse(null);
     } finally {
       setLoading(false);
