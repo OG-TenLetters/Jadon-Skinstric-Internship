@@ -9,7 +9,7 @@ interface ImageSubmissionData {
 
 interface ImageApiResponse {
   message?: string;
-  analysisResult?: any;
+  analysisResult?: string;
   error?: string;
 }
 
@@ -46,11 +46,11 @@ export const SendImageData = async (imageData: string): Promise<ImageApiResponse
     }
 
     const responseData: ImageApiResponse = await response.json();
-    const SuccessfulApiData = createContext(responseData)
+    createContext(responseData)
 
     return responseData;
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in sendImageToSkinstricPhaseTwo:', error);
     throw error;
   }

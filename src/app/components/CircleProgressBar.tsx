@@ -18,7 +18,6 @@ export default function CircleProgressBar({
   strokeWidth = 10,
   circleColor = "#d6d6d6",
   progressColor = "#3e98c7",
-  textColor = "#333",
   className = "",
    animationDuration = 750,
 }: CircleProgressBarProps) {
@@ -42,9 +41,8 @@ export default function CircleProgressBar({
     const incrementPerFrame = diff / totalFrames;
 
     let currentFrame = 0;
-    let animationTimer: NodeJS.Timeout;
 
-    animationTimer = setInterval(() => {
+   const animationTimer = setInterval(() => {
       currentFrame++;
       const nextValue = startValue + incrementPerFrame * currentFrame;
 

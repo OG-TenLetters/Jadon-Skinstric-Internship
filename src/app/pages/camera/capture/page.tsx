@@ -4,10 +4,10 @@ import NavLeft from "@/app/components/NavLeft";
 import { useEffect, useRef, useState } from "react";
 import CaptureIcon from "../../../assets/svgs/camera-capture.svg";
 import { useRouter } from "next/navigation";
-import { SendImageData } from "@/app/components/SendImageData";
 import ShiftingLotus from "@/app/components/ShiftingLotus";
 import LoadingDots from "@/app/components/LoadingDots";
 import { useImageApi } from "@/app/hooks/ImageApiContext";
+import Image from "next/image";
 
 export default function CameraCapture() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -16,7 +16,7 @@ export default function CameraCapture() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [base64Image, setBase64Image] = useState<string | null>(null);
-  const { sendImage, loading, apiResponse } = useImageApi();
+  const { sendImage, loading } = useImageApi();
 
   const router = useRouter();
 
@@ -47,40 +47,43 @@ export default function CameraCapture() {
         });
         setStream(mediaStream);
         currentStream = mediaStream;
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error accessing camera:", err);
-        if (
-          err.name === "NotAllowedError" ||
-          err.name === "PermissionDeniedError"
-        ) {
-          setError(
-            "Camera access denied. Please allow camera permissions in your browser settings."
-          );
-        } else if (
-          err.name === "NotFoundError" ||
-          err.name === "DevicesNotFoundError"
-        ) {
-          setError(
-            "No camera found. Please ensure a camera is connected and recognized by your system"
-          );
-        } else if (
-          err.name === "NotReadableError" ||
-          err.name === "TrackStartError"
-        ) {
-          setError(
-            "Camera is in use by another application or not accessible. Please close other apps using the camera."
-          );
-        } else if (
-          err.name === "OverconstrainedError" ||
-          err.name === "ConstraintNotSatisfiedError"
-        ) {
-          setError(
-            "Browser/device cannot fulfill camera requirements (e.g., specific resolution not available)."
-          );
-        } else {
-          setError(`An unknown error occurred: ${err.message}`);
+
+        if (err instanceof Error) {
+          if (
+            err.name === "NotAllowedError" ||
+            err.name === "PermissionDeniedError"
+          ) {
+            setError(
+              "Camera access denied. Please allow camera permissions in your browser settings."
+            );
+          } else if (
+            err.name === "NotFoundError" ||
+            err.name === "DevicesNotFoundError"
+          ) {
+            setError(
+              "No camera found. Please ensure a camera is connected and recognized by your system"
+            );
+          } else if (
+            err.name === "NotReadableError" ||
+            err.name === "TrackStartError"
+          ) {
+            setError(
+              "Camera is in use by another application or not accessible. Please close other apps using the camera."
+            );
+          } else if (
+            err.name === "OverconstrainedError" ||
+            err.name === "ConstraintNotSatisfiedError"
+          ) {
+            setError(
+              "Browser/device cannot fulfill camera requirements (e.g., specific resolution not available)."
+            );
+          } else {
+            setError(`An unknown error occurred: ${err.message}`);
+          }
+          setStream(null);
         }
-        setStream(null);
       }
     };
     requestCamera();
@@ -180,7 +183,7 @@ export default function CameraCapture() {
     }
     setBase64Image(null);
     setError(null);
-    setSelectedImage(null)
+    setSelectedImage(null);
 
     setTimeout(() => {
       if (videoRef.current && stream) {
@@ -188,7 +191,7 @@ export default function CameraCapture() {
         videoElement.srcObject = stream;
 
         const handleCanPlayThrough = () => {
-          videoElement.play().catch((playErr) => {
+          videoElement.play().catch(() => {
             setError("Failed to resume camera feed.");
           });
           videoElement.removeEventListener(
@@ -209,7 +212,11 @@ export default function CameraCapture() {
           );
         };
         videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-         videoElement.play().catch(e => console.warn("Retake: Immediate play attempt failed", e));
+        videoElement
+          .play()
+          .catch((e) =>
+            console.warn("Retake: Immediate play attempt failed", e)
+          );
       } else {
         console.warn(
           "Retake: VideoRef or stream not available after timeout. Cannot resume playback"
@@ -242,9 +249,13 @@ export default function CameraCapture() {
         reader.readAsDataURL(blob);
       });
       setBase64Image(base64String);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error during image conversion:", err);
-      const errorMessage = err.message || "Failed to convert photo for upload.";
+      let errorMessage = "Failed to convert photo for upload.";
+      if (err instanceof Error) {
+        errorMessage = err.message
+      } else if (typeof err === 'string')
+        errorMessage = err
       setError(errorMessage);
       setBase64Image(null);
     }
@@ -256,9 +267,15 @@ export default function CameraCapture() {
         try {
           await sendImage(base64Image);
           router.push("/pages/select");
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("Analysis failed:", error);
-          alert(`Analysis failed: ${error.message || "Unknown error"}`);
+          let alertMessage = "An unknown error occurred during analysis."
+          if (error instanceof Error) {
+            alertMessage = error.message;
+          } else if (typeof error === 'string') {
+            alertMessage = error
+          }
+          alert(`Analysis failed: ${alertMessage}`);
           setSelectedImage(null);
           setBase64Image(null);
         }
@@ -267,7 +284,7 @@ export default function CameraCapture() {
     }
   }, [base64Image, router, sendImage]);
 
-  console.log(retakePhoto)
+  console.log(retakePhoto);
 
   return (
     <>
@@ -279,8 +296,19 @@ export default function CameraCapture() {
             </div>
             <div className="absolute right-8 top-16">
               <h3 className="text-xs mb-2">Preview</h3>
-              <div className=" flex justify-center items-center border border-gray-300 w-32 h-32">
-                {selectedImage ? <img src={selectedImage} alt="" /> : null}
+              <div className="relative flex justify-center items-center border border-gray-300 w-32 h-32">
+                {selectedImage ? (
+                  <Image
+                    fill
+                    style={{
+                      objectFit: "contain",
+                      height: "100%",
+                      width: "100%",
+                    }}
+                    src={selectedImage}
+                    alt="Preview of selected image"
+                  />
+                ) : null}
               </div>
             </div>
             {selectedImage || loading ? (
@@ -305,7 +333,9 @@ export default function CameraCapture() {
               </div>
             )}
             {selectedImage ? (
-              <img
+              <Image
+                width={100}
+                height={100}
                 src={selectedImage}
                 alt="Captured from camera"
                 className="-scale-x-100 h-auto w-[100%] object-cover"
@@ -365,7 +395,9 @@ export default function CameraCapture() {
                   <h3 className="text-white uppercase font-bold">
                     Take Picture
                   </h3>
-                  <img
+                  <Image
+                    width={CaptureIcon.width}
+                    height={CaptureIcon.height}
                     onClick={takePhoto}
                     className="scale-120 transition-all duration-300 hover:scale-132 hover:opacity-90"
                     src={CaptureIcon.src}

@@ -5,8 +5,7 @@ import Link from "next/link";
 import NavRight from "./components/NavRight";
 import NavLeft from "./components/NavLeft";
 import { useImageApi } from "./hooks/ImageApiContext";
-
-
+import Image from "next/image";
 
 export default function Home() {
   const leftTriggerRef = useRef<HTMLDivElement>(null);
@@ -15,7 +14,7 @@ export default function Home() {
   const leftDiamondRef = useRef<HTMLDivElement>(null);
   const rightDiamondRef = useRef<HTMLDivElement>(null);
   const spanRef = useRef<HTMLDivElement>(null);
-  const { demographics } = useImageApi()
+  const { demographics } = useImageApi();
 
   useEffect(() => {
     const lT = leftTriggerRef.current;
@@ -86,9 +85,15 @@ export default function Home() {
       ></div>
 
       <div className="flex lg:justify-between items-center justify-center">
-        <div className={`${demographics === null ? "opacity-30" : "opacity-100"}`}>
+        <div
+          className={`${demographics === null ? "opacity-30" : "opacity-100"}`}
+        >
           <div ref={leftTriggerRef} className="ml-24 lg:block hidden">
-            <NavLeft defaulted={false} currentLink={demographics === null ? (""):("pages/summary")} name="Discover A.I." />
+            <NavLeft
+              defaulted={false}
+              currentLink={demographics === null ? "" : "pages/summary"}
+              name="Discover A.I."
+            />
           </div>
         </div>
         <div
@@ -108,7 +113,7 @@ export default function Home() {
         tailored to what your skin needs.
       </div>
 
-<div className="lg:hidden block">
+      <div className="lg:hidden block">
         <Link
           href="/pages/testing"
           className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex"
@@ -117,17 +122,27 @@ export default function Home() {
             enter experience
           </div>
           <div className="relative flex justify-center items-center p-2 border border-black border-solid rotate-45 transition-all duration-600 md:scale-100 sm:scale-90 scale-70">
-            <img
+            <Image
+              width={12}
+              height={12}
               className="w-[12px] h-[12px] translate-x-[2px] -translate-y-[2px] -rotate-45"
               src={Triangle.src}
               alt=""
             />
           </div>
         </Link>
-        <div className={`${demographics === null ? "hidden" : ""} text-sm font-bold mt-5`}>
-          <NavLeft defaulted={false} currentLink="/pages/summary" name="Back To Summary" />
+        <div
+          className={`${
+            demographics === null ? "hidden" : ""
+          } text-sm font-bold mt-5`}
+        >
+          <NavLeft
+            defaulted={false}
+            currentLink="/pages/summary"
+            name="Back To Summary"
+          />
         </div>
-</div>
+      </div>
     </div>
   );
 }

@@ -9,13 +9,14 @@ import ShiftingLotus from "@/app/components/ShiftingLotus";
 import LoadingDots from "@/app/components/LoadingDots";
 import { useRouter } from "next/navigation";
 import { useImageApi } from "@/app/hooks/ImageApiContext"; // IMPORT YOUR CONTEXT HOOK HERE
+import Image from "next/image";
 
 export default function ResultsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isModal, setIsModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [base64Image, setBase64Image] = useState<string | null>(null);
-  const { sendImage, loading, error, apiResponse } = useImageApi();
+  const { sendImage, loading } = useImageApi();
   const router = useRouter();
 
   const openFileExplorer = () => {
@@ -74,9 +75,13 @@ export default function ResultsPage() {
         try {
           await sendImage(base64Image);
           router.push("/pages/select");
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("Analysis failed:", error);
-          alert(`Analysis failed: ${error.message || "Unknown error"}`);
+          let alertMessage = "Analysis failed"
+          if (error instanceof Error) {
+            alertMessage = error.message
+          }
+          alert(`Analysis failed: ${alertMessage || "Unknown error"}`);
           setSelectedImage(null);
           setBase64Image(null);
         }
@@ -97,8 +102,8 @@ export default function ResultsPage() {
           }  transition-opacity duration-600 absolute mt-8 right-8`}
         >
           <h3 className="text-xs mb-2">Preview</h3>
-          <div className=" flex justify-center items-center border border-gray-300 w-32 h-32">
-            {selectedImage ? <img src={selectedImage} alt="" /> : null}
+          <div className=" relative flex justify-center items-center border border-gray-300 w-32 min-h-32 max-h-60">
+            {selectedImage ? <Image fill style={{ objectFit: 'contain', height: '100%', width: '100%' }} src={selectedImage} alt="Preview of selected image" /> : null}
           </div>
         </div>
         {selectedImage || loading ? (
@@ -138,12 +143,17 @@ export default function ResultsPage() {
                     </div>
                   ) : null}
 
-                  <img
+                  <Image
+                    width={CameraIcon.height}
+                    height={CameraIcon.height}
                     onClick={() => showModal()}
                     className="hover:scale-105 transition-scale duration-300 ease-in-out cursor-pointer"
                     src={CameraIcon.src}
+                    alt="Take a picture from Camera"
                   />
-                  <img
+                  <Image
+                    width={Vector.width}
+                    height={Vector.height}
                     className="absolute top-0 right-0 md:block hidden translate-y-[-36px] translate-x-[36px] -z-1"
                     src={Vector.src}
                     alt=""
@@ -160,12 +170,17 @@ export default function ResultsPage() {
               >
                 <ShiftingLotus />
                 <div className="text-center relative">
-                  <img
+                  <Image
+                    width={GalleryIcon.width}
+                    height={GalleryIcon.height}
                     onClick={() => openFileExplorer()}
                     className="hover:scale-105 transition-scale duration-300 ease-in-out cursor-pointer"
                     src={GalleryIcon.src}
+                    alt="Choose photo from Gallery"
                   />
-                  <img
+                  <Image
+                    width={Vector.width}
+                    height={Vector.height}
                     className="absolute rotate-180 md:block hidden bottom-0 left-0 translate-y-[20px] translate-x-[-48px] -z-1"
                     src={Vector.src}
                     alt=""

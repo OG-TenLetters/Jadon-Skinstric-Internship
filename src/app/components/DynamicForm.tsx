@@ -116,10 +116,10 @@ export default function DynamicForm({ setProcessComplete }: DynamicFormProps) {
         try {
           const responseData = await sendForm(dataToSubmit);
           setCurrentStage("completed");
+          console.log(responseData)
         } catch (error) {
           console.error("Form submission failed:", error);
           setIsProcessing(false);
-         
           setCurrentStage("city");
         }
       }

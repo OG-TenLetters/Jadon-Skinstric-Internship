@@ -16,10 +16,8 @@ export default function CountdownProgressBar({currentLink}: CountdownProgressBar
   const decrementAmount = 100 / totalSteps;
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | undefined;
 
-
-      timer = setInterval(() => {
+     const timer = setInterval(() => {
         setProgress((prevProgress) => {
           const newProgress = prevProgress - decrementAmount;
 

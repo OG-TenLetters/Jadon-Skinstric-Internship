@@ -32,7 +32,7 @@ export default function SummaryPage() {
   } | null>(null);
 
   const findMaxInCategory = (
-    data: Record<string, number | undefined > | undefined
+    data: Record<string, number | undefined> | undefined
   ): { key: string; percentage: number } | null => {
     if (!data) return null;
     let maxKey: string | null = null;
@@ -183,7 +183,9 @@ export default function SummaryPage() {
             </div>
           </div>
           <div className="flex flex-col bg-gray-100 p-4 border border-x-0 border-b-0 lg:w-[65%] md:w-[50%] w-[100%] md:gap-16 gap-4">
-            <h2 className="text-3xl md:block hidden capitalize">{activeDemoCat}: {highlightedItemKey}</h2>
+            <h2 className="text-3xl md:block hidden capitalize">
+              {activeDemoCat}: {highlightedItemKey}
+            </h2>
             <div className="flex md:justify-end justify-center w-full">
               <CircleProgressBar
                 percentage={currentPercentage}
