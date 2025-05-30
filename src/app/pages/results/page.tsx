@@ -119,7 +119,7 @@ export default function ResultsPage() {
         ) : (
           <>
             <div className="flex md:flex-row flex-col w-full h-full md:justify-around  justify-center items-center">
-              <div className="flex justify-center items-center w-50 h-full relative">
+              <div className="scale-75 flex justify-center items-center w-50 h-full relative">
                 <ShiftingLotus />
                 <div className="text-center relative">
                   {isModal ? (
@@ -166,7 +166,7 @@ export default function ResultsPage() {
               <div
                 className={` ${
                   isModal && "opacity-50 pointer-events-none"
-                } flex justify-center  transition-opacity duration-600 items-center w-50% h-full relative`}
+                } scale-75  flex justify-center  transition-opacity duration-600 items-center w-50% h-full relative`}
               >
                 <ShiftingLotus />
                 <div className="text-center relative">

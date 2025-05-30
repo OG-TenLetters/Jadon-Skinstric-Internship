@@ -284,7 +284,6 @@ export default function CameraCapture() {
     }
   }, [base64Image, router, sendImage]);
 
-  console.log(retakePhoto);
 
   return (
     <>

@@ -31,12 +31,12 @@ export default function SelectPage() {
           <div className="font-semibold rotate-45 grid gap-2 grid-cols-2 grid-rows-2">
             <div
               ref={smallDiamond}
-              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-110 sm:h-110 w-80 h-80 border-2 border-dashed -z-1 diamond-transition
+              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-110 sm:h-110 w-60 h-60 border-2 border-dashed -z-1 diamond-transition
                 ${isTopSelectHovered ? "diamond-hovered" : ""}`}
             ></div>
             <div
               ref={mediumDiamond}
-              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-130 sm:h-130 w-100 h-100 border-2 border-dashed -z-1 diamond-transition
+              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-130 sm:h-130 w-70 h-70 border-2 border-dashed -z-1 diamond-transition
                 ${
                   isLeftSelectHovered || isRightSelectHovered
                     ? "diamond-hovered"
@@ -45,7 +45,7 @@ export default function SelectPage() {
             ></div>
             <div
               ref={largeDiamond}
-              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-150 sm:h-150 w-120 h-120 border-2 border-dashed -z-1 diamond-transition
+              className={`absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] sm:w-150 sm:h-150 w-90 h-90 border-2 border-dashed -z-1 diamond-transition
                 ${isBottomSelectHovered ? "diamond-hovered" : ""}`}
             ></div>
             <Link href={"/pages/summary"}>

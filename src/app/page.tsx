@@ -77,14 +77,14 @@ export default function Home() {
     <div className="no-Xscroll flex flex-col h-[93vh] p-4 justify-center lg:items-stretch items-center">
       <div
         ref={leftDiamondRef}
-        className="absolute md:w-[60vh] md:h-[60vh] w-[40vh] h-[40vh] rotate-45 lg:left-0 lg:translate-x-[-60%] left-[50%] translate-x-[-50%] lg:scale-100 scale-85 -z-1 border border-gray-400 border-dotted"
+        className="absolute md:w-[60vh] md:h-[60vh] w-[32vh] h-[32vh] rotate-45 lg:left-0 lg:translate-x-[-60%] left-[50%] translate-x-[-50%] lg:scale-100 scale-85 -z-1 border border-gray-400 border-dotted"
       ></div>
       <div
         ref={rightDiamondRef}
-        className="absolute md:w-[60vh] md:h-[60vh] w-[40vh] h-[40vh] rotate-45 lg:right-0 lg:-translate-x-[-60%] lg:scale-100 right-[50%] translate-x-[50%] scale-70 -z-1 border border-gray-400 border-dotted "
+        className="absolute md:w-[60vh] md:h-[60vh] w-[32vh] h-[32vh] rotate-45 lg:right-0 lg:-translate-x-[-60%] lg:scale-100 right-[50%] translate-x-[50%] scale-70 -z-1 border border-gray-400 border-dotted "
       ></div>
 
-      <div className="flex lg:justify-between items-center justify-center">
+      <div className="flex  lg:justify-between items-center justify-center">
         <div
           className={`${demographics === null ? "opacity-30" : "opacity-100"}`}
         >
@@ -98,8 +98,11 @@ export default function Home() {
         </div>
         <div
           ref={sophisticatedTextRef}
-          style={{ animation: "var(--animation-fade-in-delay)" }}
-          className="opacity-0 lg:flex lg:flex-col justify-center items-center lg:max-w-[800px] md:max-w-[600px] max-w-[300px] text-center xl:text-8xl lg:text-7xl sm:max-w-[600px] md:text-6xl text-4xl block"
+          style={{
+            animation: "var(--animation-fade-in-delay)",
+            animationDelay: "50ms",
+          }}
+          className="opacity-0 lg:flex lg:flex-col justify-center items-center lg:max-w-[800px] md:max-w-[600px] max-w-[300px] text-center xl:text-8xl lg:text-7xl sm:max-w-[600px] md:text-6xl text-3xl block"
         >
           Sophisticated <span ref={spanRef}>skincare</span>
         </div>
@@ -108,7 +111,13 @@ export default function Home() {
           <NavRight currentLink={"/pages/testing"} name="Take Test" />
         </div>
       </div>
-      <div className="lg:uppercase lg:text-black text-[#919292] my-4 sm:text-sm text-xs max-w-[260px] lg:font-normal font-bold lg:absolute lg:bottom-4 lg:left-20 lg:text-left static text-center">
+      <div
+        style={{
+          animation: "var(--animation-fade-in-delay)",
+          animationDelay: "100ms",
+        }}
+        className="opacity-0 lg:uppercase lg:text-black text-[#919292] my-4 sm:text-sm text-xs max-w-[260px] lg:font-normal font-bold lg:absolute lg:bottom-4 lg:left-20 lg:text-left static text-center"
+      >
         Skinstic developed an A.I. that creates a highly-personalized routine
         tailored to what your skin needs.
       </div>
@@ -116,7 +125,8 @@ export default function Home() {
       <div className="lg:hidden block">
         <Link
           href="/pages/testing"
-          className="hover:scale-105 hover:active:scale-100 lg:hidden items-center gap-4 transition-all duration-300 relative flex justify-center"
+          style={{ animation: "var(--animation-fade-in-delay)" }}
+          className="hover:scale-105 hover:active:scale-100 opacity-0 lg:hidden items-center gap-4 transition-all duration-300 relative flex justify-center"
         >
           <div className="uppercase font-bold sm:text-sm text-xs">
             enter experience
@@ -132,9 +142,13 @@ export default function Home() {
           </div>
         </Link>
         <div
+          style={{
+            animation: "var(--animation-fade-in-delay)",
+            animationDelay: "100ms",
+          }}
           className={`${
             demographics === null ? "hidden" : ""
-          } sm:hover:scale-105 hover:scale-85 transition-scale duration-300 text-sm sm:scale-100 scale-80 font-bold mt-3`}
+          } opacity-0 sm:hover:scale-105 hover:scale-85 transition-scale duration-300 text-sm sm:scale-100 scale-80 font-bold mt-3`}
         >
           <NavLeft
             defaulted={false}

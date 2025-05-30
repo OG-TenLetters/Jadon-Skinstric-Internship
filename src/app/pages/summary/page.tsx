@@ -137,13 +137,13 @@ export default function SummaryPage() {
   };
   return (
     <>
-      <div className="flex flex-col md:pt-0 pt-20 pb-40 justify-between items-start h-[92vh]">
+      <div className="flex flex-col md:pt-0 pt-20 pb-40 justify-between items-start h-[93vh]">
         <div className="ml-8 text-sm">
           <h3 className="font-semibold">A.I. ANALYsis</h3>
           <h3 className="sm:text-5xl text-3xl">DEMOGRAPHICS</h3>
           <h3>PREDICTED RACE & AGE</h3>
         </div>
-        <div className="flex md:flex-row flex-col  w-[100%] justify-center p-8 pb-40 items-start gap-3">
+        <div className="flex md:flex-row flex-col w-full justify-center p-8 items-start gap-3">
           <div className="lg:w-[12%] md:w-[20%] w-[100%] flex flex-col gap-2">
             <div
               onClick={() => handleDemographicsCategoryChange("race")}
@@ -193,7 +193,7 @@ export default function SummaryPage() {
                 strokeWidth={5}
                 circleColor="#d8d8d8"
                 progressColor="black"
-                className="w-full max-w-xs md:max-w-md lg:max-w-lg aspect-square"
+                className="w-full max-w-xs md:max-w-md lg:max-w-100 aspect-square"
               />
             </div>
             <h3 className="flex justify-center text-center text-gray-500 md:hidden">
@@ -261,7 +261,7 @@ export default function SummaryPage() {
               })}
           </div>
         </div>
-        <div className="flex bg-white w-full justify-between  p-8 sm:text-[16px] text-[12px] md:static fixed md:bottom-auto bottom-0">
+        <div className="flex bg-white w-full justify-between  p-8 sm:text-[16px] text-[12px] fixed bottom-0">
           <NavLeft
             defaulted={false}
             currentLink="/pages/select"
